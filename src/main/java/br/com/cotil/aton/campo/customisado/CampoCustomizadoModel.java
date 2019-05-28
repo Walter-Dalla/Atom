@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -17,6 +18,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import br.com.cotil.aton.campo.padrao.CampoPadraoModel;
+import br.com.cotil.aton.usuario.UsuarioModel;
 
 @Entity
 @Table(name = "CAMPO_CUSTOMIZADO")
@@ -25,13 +27,11 @@ public class CampoCustomizadoModel {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer idCampoCustomizado;
+  private Integer id;
 
-//  @OneToOne
-//  @JoinColumn(name = "ID_USUARIO")
-  @Column(name = "ID_USUARIO")
-  private Integer usuario;
-  // UsuarioModel usuario;
+  @ManyToOne
+  @JoinColumn(name = "ID_USUARIO")
+  private UsuarioModel usuario;
 
   @OneToOne
   @JoinColumn(name = "ID_CAMPO_PADRAO")
@@ -56,37 +56,20 @@ public class CampoCustomizadoModel {
 
   @Column(name = "PLACE_HOLDER")
   private String placeHolder;
-  
-  public CampoCustomizadoModel() {}
-  
-  public CampoCustomizadoModel(Integer idCampoCustomizado, Integer usuario,
-      CampoPadraoModel campoPadrao, String nome, Date dataCriacao, Date dataAlteracao,
-      String descricao, String toolTip, String placeHolder) {
-    super();
-    this.idCampoCustomizado = idCampoCustomizado;
-    this.usuario = usuario;
-    this.campoPadrao = campoPadrao;
-    this.nome = nome;
-    this.dataCriacao = dataCriacao;
-    this.dataAlteracao = dataAlteracao;
-    this.descricao = descricao;
-    this.toolTip = toolTip;
-    this.placeHolder = placeHolder;
+
+  public Integer getId() {
+    return id;
   }
 
-  public Integer getIdCampoCustomizado() {
-    return idCampoCustomizado;
+  public void setId(Integer id) {
+    this.id = id;
   }
 
-  public void setIdCampoCustomizado(Integer idCampoCustomizado) {
-    this.idCampoCustomizado = idCampoCustomizado;
-  }
-
-  public Integer getUsuario() {
+  public UsuarioModel getUsuario() {
     return usuario;
   }
 
-  public void setUsuario(Integer usuario) {
+  public void setUsuario(UsuarioModel usuario) {
     this.usuario = usuario;
   }
 
@@ -148,9 +131,9 @@ public class CampoCustomizadoModel {
 
   @Override
   public String toString() {
-    return "CampoCustomizadoModel [idCampoCustomizado=" + idCampoCustomizado + ", usuario="
-        + usuario + ", campoPadrao=" + campoPadrao + ", nome=" + nome + ", dataCriacao="
-        + dataCriacao + ", dataAlteracao=" + dataAlteracao + ", descricao=" + descricao
-        + ", toolTip=" + toolTip + ", placeHolder=" + placeHolder + "]";
+    return "CampoCustomizadoModel [id=" + id + ", usuario=" + usuario + ", campoPadrao="
+        + campoPadrao + ", nome=" + nome + ", dataCriacao=" + dataCriacao + ", dataAlteracao="
+        + dataAlteracao + ", descricao=" + descricao + ", toolTip=" + toolTip + ", placeHolder="
+        + placeHolder + "]";
   }
 }
