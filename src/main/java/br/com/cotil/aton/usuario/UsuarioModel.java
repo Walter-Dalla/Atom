@@ -35,7 +35,7 @@ public class UsuarioModel {
   private String nome;
 
   @Column(name = "EMAIL_PRIMARIO")
-  private String eMail;
+  private String email;
 
   @Column(name = "TELEFONE")
   private String telefone;
@@ -44,10 +44,10 @@ public class UsuarioModel {
   private String cargo;
 
   @Column(name = "CPF")
-  private String CPF;
+  private String cpf;
 
   @Column(name = "PERFIL_ORDEM")
-  private String PerfilOrdem;
+  private Integer perfilOrdem;
 
   @CreatedDate
   @Column(name = "DATA_CRIACAO")
@@ -57,5 +57,83 @@ public class UsuarioModel {
   @Column(name = "DATA_ATUALIZACAO")
   Date dataUltimaAtualizacao;
 
+  public Integer getId() {
+    return id;
+  }
 
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  public EmpresaModel getEmpresa() {
+    return empresa;
+  }
+
+  public void setEmpresa(EmpresaModel empresa) {
+    this.empresa = empresa;
+  }
+
+  public String getNome() {
+    return nome;
+  }
+
+  public void setNome(String nome) {
+    this.nome = nome;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getTelefone() {
+    return telefone;
+  }
+
+  public void setTelefone(String telefone) {
+    this.telefone = telefone;
+  }
+
+  public String getCargo() {
+    return cargo;
+  }
+
+  public void setCargo(String cargo) {
+    this.cargo = cargo;
+  }
+
+  public String getCpf() {
+    return cpf;
+  }
+
+  public void setCpf(String cpf) {
+    this.cpf = cpf;
+  }
+
+  public Integer getPerfilOrdem() {
+    return perfilOrdem;
+  }
+
+  public void setPerfilOrdem(Integer perfilOrdem) {
+    this.perfilOrdem = perfilOrdem;
+  }
+
+  public Date getDataCriacao() {
+    return dataCriacao;
+  }
+
+  public void setDataCriacao(Date dataCriacao) {
+    this.dataCriacao = dataCriacao;
+  }
+
+  public Date getDataUltimaAtualizacao() {
+    return dataUltimaAtualizacao;
+  }
+
+  public void setDataUltimaAtualizacao(Date dataUltimaAtualizacao) {
+    this.dataUltimaAtualizacao = dataUltimaAtualizacao;
+  } 
 }

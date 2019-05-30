@@ -24,19 +24,22 @@ public class EmpresaModel {
   Integer id;
 
   @Column(name = "CNPJ")
-  String CNPJ;
-  
+  String cnpj;
+
   @Column(name = "RAZAO_SOCIAL")
-  String RazaoSocial;
+  String razaoSocial;
 
   @Column(name = "E_MAIL")
-  String eMail;
+  String email;
 
   @Column(name = "SITE")
-  String Site;
+  String site;
 
   @Column(name = "TELEFONE")
-  String Telefone;
+  String telefone;
+
+  @Column(name = "ID_USUARIO_CRIADOR")
+  Integer idUsuarioCriador;
 
   @CreatedDate
   @Column(name = "DATA_CRIACAO")
@@ -46,4 +49,76 @@ public class EmpresaModel {
   @Column(name = "DATA_ATUALIZACAO")
   Date dataUltimaAtualizacao;
 
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  public String getCnpj() {
+    return cnpj;
+  }
+
+  public void setCnpj(String cnpj) {
+    this.cnpj = cnpj;
+  }
+
+  public String getRazaoSocial() {
+    return razaoSocial;
+  }
+
+  public void setRazaoSocial(String razaoSocial) {
+    this.razaoSocial = razaoSocial;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getSite() {
+    return site;
+  }
+
+  public void setSite(String site) {
+    this.site = site;
+  }
+
+  public String getTelefone() {
+    return telefone;
+  }
+
+  public void setTelefone(String telefone) {
+    this.telefone = telefone;
+  }
+
+  public Integer getIdUsuarioCriador() {
+    return idUsuarioCriador;
+  }
+
+  public void setIdUsuarioCriador(Integer idUsuarioCriador) {
+    this.idUsuarioCriador = idUsuarioCriador;
+  }
+
+  public Date getDataCriacao() {
+    return dataCriacao;
+  }
+
+  public void setDataCriacao(Date dataCriacao) {
+    this.dataCriacao = dataCriacao;
+  }
+
+  public Date getDataUltimaAtualizacao() {
+    return dataUltimaAtualizacao;
+  }
+
+  public void setDataUltimaAtualizacao(Date dataUltimaAtualizacao) {
+    this.dataUltimaAtualizacao = dataUltimaAtualizacao;
+  }
+  
 }

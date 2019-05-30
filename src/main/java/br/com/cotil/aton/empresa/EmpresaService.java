@@ -94,7 +94,7 @@ public class EmpresaService {
     if (empresa.getRazaoSocial() == null)
       throw new BadRequestException(EmpresaConstantes.CAMPO_RAZAO_SOCIAL_INVALIDO);
 
-    if (empresa.geteMail() == null)
+    if (empresa.getEmail() == null)
       throw new BadRequestException(EmpresaConstantes.CAMPO_EMAIL_INVALIDO);
   }
 
