@@ -1,0 +1,32 @@
+package br.com.cotil.aton.usuario.cadastro;
+
+import br.com.cotil.aton.usuario.conexao.ConexaoModel;
+import br.com.cotil.aton.usuario.usuario.UsuarioModel;
+
+public class CadastroUtils {
+
+
+  public static UsuarioModel createUsuarioModel(CadastroUsuarioModel cadastroUsuarioModel) {
+
+    UsuarioModel usuario = new UsuarioModel();
+
+    usuario.setEmail(cadastroUsuarioModel.getEmail());
+    usuario.setNome(cadastroUsuarioModel.getNomeCompleto());
+
+
+    return usuario;
+
+  }
+
+  public static ConexaoModel createConexaoModel(CadastroUsuarioModel cadastroUsuarioModel) {
+
+    ConexaoModel con = new ConexaoModel();
+
+    con.setNomeConexao(cadastroUsuarioModel.getUserName());
+    con.setPass(cadastroUsuarioModel.getPassword());
+
+    return con;
+
+  }
+
+}

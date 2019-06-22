@@ -16,7 +16,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import br.com.cotil.aton.usuario.UsuarioModel;
+import br.com.cotil.aton.usuario.usuario.UsuarioModel;
 
 @Entity
 @Table(name = "FORMULARIO")

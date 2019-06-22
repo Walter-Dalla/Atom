@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import br.com.cotil.aton.campo.grupo.GrupoModel;
-import br.com.cotil.aton.usuario.UsuarioModel;
+import br.com.cotil.aton.usuario.usuario.UsuarioModel;
 
 @Entity
 @Table(name = "GRUPO_USUARIO")

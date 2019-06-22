@@ -1,4 +1,4 @@
-package br.com.cotil.aton.usuario;
+package br.com.cotil.aton.usuario.usuario;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

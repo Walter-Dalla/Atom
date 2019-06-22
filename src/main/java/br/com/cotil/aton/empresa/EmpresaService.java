@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service;
 import br.com.cotil.aton.HttpException.BadRequestException;
 import br.com.cotil.aton.HttpException.ForbiddenException;
 import br.com.cotil.aton.userInfo.UserInfo;
-import br.com.cotil.aton.usuario.UsuarioModel;
-import br.com.cotil.aton.usuario.UsuarioRepository;
+import br.com.cotil.aton.usuario.usuario.UsuarioModel;
+import br.com.cotil.aton.usuario.usuario.UsuarioRepository;
 
 @Service
 public class EmpresaService {
-
+      
   private EmpresaRepository empresaRepository;
   private UsuarioRepository usuarioRepository;
 

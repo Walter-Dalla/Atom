@@ -1,6 +1,6 @@
-package br.com.cotil.aton.usuario;
+package br.com.cotil.aton.usuario.usuario;
 
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

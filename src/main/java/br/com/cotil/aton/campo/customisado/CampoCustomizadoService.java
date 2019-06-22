@@ -8,7 +8,7 @@ import br.com.cotil.aton.Utils;
 import br.com.cotil.aton.HttpException.BadRequestException;
 import br.com.cotil.aton.campo.padrao.CampoPadraoModel;
 import br.com.cotil.aton.campo.padrao.CampoPadraoRepository;
-import br.com.cotil.aton.usuario.UsuarioModel;
+import br.com.cotil.aton.usuario.usuario.UsuarioModel;
 
 @Service
 public class CampoCustomizadoService {
