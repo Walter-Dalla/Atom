@@ -3,6 +3,7 @@ package br.com.cotil.aton.usuario.cadastro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.cotil.aton.HttpException.BadRequestException;
 import br.com.cotil.aton.HttpException.ConflictException;
 import br.com.cotil.aton.usuario.conexao.ConexaoModel;
 import br.com.cotil.aton.usuario.conexao.ConexaoRepository;
@@ -25,7 +26,7 @@ public class CadastroUsuarioService {
   }
 
   public UsuarioModel cadastrarUsuario(CadastroUsuarioModel cadastroUsuarioModel)
-      throws ConflictException {
+      throws ConflictException, BadRequestException {
 
     UsuarioModel usuarioModel = CadastroUtils.createUsuarioModel(cadastroUsuarioModel);
     ConexaoModel conexao = CadastroUtils.createConexaoModel(cadastroUsuarioModel);
@@ -39,12 +40,15 @@ public class CadastroUsuarioService {
     return usuarioModel;
   }
 
-  private void validacaoAoCriarUsuario(ConexaoModel conexao) throws ConflictException {
+  private void validacaoAoCriarUsuario(ConexaoModel conexao) throws ConflictException, BadRequestException {
 
     boolean existe = conexaoRepository.existsByNomeConexao(conexao.getNomeConexao());
 
     if (existe)
       throw new ConflictException("Nome de usuario já existente");
+    
+    if(conexao.getNomeConexao() == null || conexao.getPass() == null)
+      throw new BadRequestException("O usuario deve conter um nome e uma senha");
 
   }
 

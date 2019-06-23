@@ -7,7 +7,7 @@ public class CadastroUsuarioModel {
 
   private String userName;
 
-  private String NomeCompleto;
+  private String nomeCompleto;
 
   private String email;
 
@@ -28,13 +28,11 @@ public class CadastroUsuarioModel {
   }
 
   public String getNomeCompleto() {
-    return NomeCompleto;
+    return nomeCompleto;
   }
 
-
-
   public void setNomeCompleto(String nomeCompleto) {
-    NomeCompleto = nomeCompleto;
+    this.nomeCompleto = nomeCompleto;
   }
 
   public String getEmail() {
@@ -49,6 +47,6 @@ public class CadastroUsuarioModel {
   @Override
   public String toString() {
     return "CadastroUsuarioModel [password=" + password + ", userName=" + userName
-        + ", NomeCompleto=" + NomeCompleto + ", email=" + email + "]";
+        + ", nomeCompleto=" + nomeCompleto + ", email=" + email + "]";
   }
 }

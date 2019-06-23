@@ -8,15 +8,11 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import br.com.cotil.aton.empresa.EmpresaModel;
 
 @Entity
 @Table(name = "USUARIO")
@@ -26,10 +22,6 @@ public class UsuarioModel {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
-
-  @OneToOne
-  @JoinColumn(name = "ID_EMPRESA")
-  private EmpresaModel empresa;
 
   @Column(name = "NOME_USUARIO")
   private String nome;
@@ -42,13 +34,16 @@ public class UsuarioModel {
 
   @Column(name = "CARGO")
   private String cargo;
+  
+  @Column(name = "ATIVO")
+  private boolean ativo;
 
   @CreatedDate
-  @Column(name = "DATA_CRIACAO")
+  @Column(name = "DATA_CRIACAO", updatable = false)
   Date dataCriacao;
 
   @LastModifiedDate
-  @Column(name = "DATA_ATUALIZACAO")
+  @Column(name = "DATA_ATUALIZACAO", updatable = false)
   Date dataUltimaAtualizacao;
 
   public Integer getId() {
@@ -57,14 +52,6 @@ public class UsuarioModel {
 
   public void setId(Integer id) {
     this.id = id;
-  }
-
-  public EmpresaModel getEmpresa() {
-    return empresa;
-  }
-
-  public void setEmpresa(EmpresaModel empresa) {
-    this.empresa = empresa;
   }
 
   public String getNome() {
@@ -98,7 +85,7 @@ public class UsuarioModel {
   public void setCargo(String cargo) {
     this.cargo = cargo;
   }
-  
+
   public Date getDataCriacao() {
     return dataCriacao;
   }
@@ -113,5 +100,14 @@ public class UsuarioModel {
 
   public void setDataUltimaAtualizacao(Date dataUltimaAtualizacao) {
     this.dataUltimaAtualizacao = dataUltimaAtualizacao;
-  } 
+  }
+
+  public boolean isAtivo() {
+    return ativo;
+  }
+
+  public void setAtivo(boolean ativo) {
+    this.ativo = ativo;
+  }
+  
 }

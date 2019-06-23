@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.cotil.aton.HttpException.BadRequestException;
-import br.com.cotil.aton.userInfo.UserInfoModel;
+import br.com.cotil.aton.usuario.usuario.UsuarioModel;
 
 @Service
 public class GrupoService {
@@ -15,21 +15,22 @@ public class GrupoService {
   GrupoRepository grupoRepository;
   
   
-  public List<GrupoModel> getGrupos(UserInfoModel userInfo) throws BadRequestException {
+  public List<GrupoModel> getGrupos(UsuarioModel userInfo) throws BadRequestException {
     
-    if(userInfo.getIdGrupo() == null)
-      throw new BadRequestException(GrupoConstantes.USUARIO_SEM_GRUPO);
-    
-    List<GrupoModel> grupoList = grupoRepository.findAllById(userInfo.getIdGrupo());
-    
-    if(!grupoList.isEmpty())
-      throw new BadRequestException(GrupoConstantes.GRUPO_NÃO_EXISTE);
-    
-    return grupoList;
+//    if(userInfo.getIdGrupo() == null)
+//      throw new BadRequestException(GrupoConstantes.USUARIO_SEM_GRUPO);
+//    
+//    List<GrupoModel> grupoList = grupoRepository.findAllById(userInfo.getIdGrupo());
+//    
+//    if(!grupoList.isEmpty())
+//      throw new BadRequestException(GrupoConstantes.GRUPO_NÃO_EXISTE);
+//    
+//    return grupoList;
+    return null;
   }
   
   
-  public void updateGrupos(GrupoModel grupo, UserInfoModel userInfo) {
+  public void updateGrupos(GrupoModel grupo, UsuarioModel userInfo) {
     
     
     

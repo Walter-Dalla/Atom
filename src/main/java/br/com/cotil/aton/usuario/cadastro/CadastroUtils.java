@@ -12,7 +12,7 @@ public class CadastroUtils {
 
     usuario.setEmail(cadastroUsuarioModel.getEmail());
     usuario.setNome(cadastroUsuarioModel.getNomeCompleto());
-
+    usuario.setAtivo(true);
 
     return usuario;
 

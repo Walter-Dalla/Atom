@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.cotil.aton.HttpException.BadRequestException;
 import br.com.cotil.aton.HttpException.ConflictException;
 import br.com.cotil.aton.usuario.usuario.UsuarioModel;
 
@@ -19,7 +20,7 @@ public class CadastroController {
 
   @PostMapping
   public UsuarioModel postMethodName(@RequestBody CadastroUsuarioModel cadastroUsuarioModel)
-      throws ConflictException {
+      throws ConflictException, BadRequestException {
 
     UsuarioModel usuarioModel = cadastroUsuarioService.cadastrarUsuario(cadastroUsuarioModel);
 

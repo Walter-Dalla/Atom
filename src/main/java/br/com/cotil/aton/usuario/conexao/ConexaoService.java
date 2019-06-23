@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.cotil.aton.HttpException.BadRequestException;
 import br.com.cotil.aton.HttpException.ConflictException;
+import br.com.cotil.aton.HttpException.ForbiddenException;
 import br.com.cotil.aton.usuario.token.TokenModel;
 import br.com.cotil.aton.usuario.token.TokenService;
 import br.com.cotil.aton.usuario.usuario.UsuarioRepository;
@@ -29,12 +30,12 @@ public class ConexaoService {
     this.tokenService = tokenService;
   }
 
-  public TokenModel autorizar(ConexaoModel conexaoModel)
-      throws ConflictException, BadRequestException {
+  public TokenModel autorizar(ConexaoModel conexaoModel, String ip)
+      throws ConflictException, BadRequestException, ForbiddenException {
 
     ConexaoModel conexao = validarConexao(conexaoModel);
 
-    TokenModel token = tokenService.GerarToken(conexao);
+    TokenModel token = tokenService.GerarToken(conexao, ip);
 
     return token;
   }
