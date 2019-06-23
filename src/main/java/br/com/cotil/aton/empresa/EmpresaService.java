@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.cotil.aton.HttpException.BadRequestException;
 import br.com.cotil.aton.HttpException.ForbiddenException;
-import br.com.cotil.aton.userInfo.UserInfo;
+import br.com.cotil.aton.userInfo.UserInfoModel;
 import br.com.cotil.aton.usuario.usuario.UsuarioModel;
 import br.com.cotil.aton.usuario.usuario.UsuarioRepository;
 
@@ -22,10 +22,10 @@ public class EmpresaService {
     this.empresaRepository = empresaRepository;
   }
 
-  public Object getEmpresa(UserInfo userInfo) throws BadRequestException {
+  public Object getEmpresa(UsuarioModel userInfo) throws BadRequestException {
 
 
-    Optional<EmpresaModel> empresaOptional = empresaRepository.findById(userInfo.getIdEmpresa());
+    Optional<EmpresaModel> empresaOptional = empresaRepository.findById(userInfo.getEmpresa().getId());
 
     if (!empresaOptional.isPresent())
       throw new BadRequestException(EmpresaConstantes.USUARIO_SEM_EMPRESA);
@@ -33,18 +33,18 @@ public class EmpresaService {
     return empresaOptional.get();
   }
 
-  public Object createEmpresa(EmpresaModel empresa, UserInfo userInfo)
+  public Object createEmpresa(EmpresaModel empresa, UsuarioModel userInfo)
       throws BadRequestException, ForbiddenException {
 
-    if (userInfo.getIdEmpresa() != null)
+    if (userInfo.getEmpresa().getId() != null)
       throw new ForbiddenException(EmpresaConstantes.USUARIO_COM_EMPRESA);
 
-    empresa.setIdUsuarioCriador(userInfo.getIdUsuario());
+    empresa.setIdUsuarioCriador(userInfo.getId());
 
     return empresaRepository.save(empresa);
   }
 
-  public Object updateEmpresa(EmpresaModel empresa, UserInfo userInfo)
+  public Object updateEmpresa(EmpresaModel empresa, UserInfoModel userInfo)
       throws BadRequestException, ForbiddenException {
 
     if (userInfo.getIdEmpresa() == null)
@@ -63,13 +63,13 @@ public class EmpresaService {
     return empresaRepository.save(empresa);
   }
 
-  public Object updateUsuarioCriador(EmpresaModel empresa, UserInfo userInfo)
+  public Object updateUsuarioCriador(EmpresaModel empresa, UsuarioModel userInfo)
       throws BadRequestException, ForbiddenException {
 
-    if (userInfo.getIdEmpresa() == null)
+    if (userInfo.getEmpresa() == null)
       throw new ForbiddenException(EmpresaConstantes.USUARIO_SEM_EMPRESA);
 
-    Optional<EmpresaModel> empresaOptional = empresaRepository.findById(userInfo.getIdEmpresa());
+    Optional<EmpresaModel> empresaOptional = empresaRepository.findById(userInfo.getEmpresa().getId());
 
     if (!empresaOptional.isPresent())
       throw new BadRequestException(EmpresaConstantes.EMPRESA_INVALIDA);

@@ -43,12 +43,6 @@ public class UsuarioModel {
   @Column(name = "CARGO")
   private String cargo;
 
-  @Column(name = "CPF")
-  private String cpf;
-
-  @Column(name = "PERFIL_ORDEM")
-  private Integer perfilOrdem;
-
   @CreatedDate
   @Column(name = "DATA_CRIACAO")
   Date dataCriacao;
@@ -104,23 +98,7 @@ public class UsuarioModel {
   public void setCargo(String cargo) {
     this.cargo = cargo;
   }
-
-  public String getCpf() {
-    return cpf;
-  }
-
-  public void setCpf(String cpf) {
-    this.cpf = cpf;
-  }
-
-  public Integer getPerfilOrdem() {
-    return perfilOrdem;
-  }
-
-  public void setPerfilOrdem(Integer perfilOrdem) {
-    this.perfilOrdem = perfilOrdem;
-  }
-
+  
   public Date getDataCriacao() {
     return dataCriacao;
   }

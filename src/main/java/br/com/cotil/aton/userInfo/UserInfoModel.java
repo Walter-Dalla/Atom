@@ -2,7 +2,7 @@ package br.com.cotil.aton.userInfo;
 
 import javax.persistence.Column;
 
-public class UserInfo {
+public class UserInfoModel {
 
   @Column(name = "ID_USUARIO")
   private Integer idUsuario;
@@ -13,8 +13,6 @@ public class UserInfo {
   @Column(name = "ID_GRUPO")
   private Integer idGrupo;
 
-  @Column(name = "PERFIL_ORDEM")
-  private String perfilOrdem;
 
   public Integer getIdUsuario() {
     return idUsuario;
@@ -32,13 +30,6 @@ public class UserInfo {
     this.idGrupo = idGrupo;
   }
 
-  public String getPerfilOrdem() {
-    return perfilOrdem;
-  }
-
-  public void setPerfilOrdem(String perfilOrdem) {
-    this.perfilOrdem = perfilOrdem;
-  }
 
   public Integer getIdEmpresa() {
     return idEmpresa;

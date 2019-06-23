@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.cotil.aton.HttpException.BadRequestException;
 import br.com.cotil.aton.HttpException.ConflictException;
 import br.com.cotil.aton.usuario.token.TokenModel;
-import br.com.cotil.aton.usuario.usuario.UsuarioModel;
 
 
 @RestController

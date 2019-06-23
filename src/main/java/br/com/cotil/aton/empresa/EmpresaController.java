@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.cotil.aton.HttpException.BadRequestException;
 import br.com.cotil.aton.HttpException.ForbiddenException;
-import br.com.cotil.aton.userInfo.AutenticadorUtils;
-import br.com.cotil.aton.userInfo.UserInfo;
+import br.com.cotil.aton.userInfo.UserInfoService;
+import br.com.cotil.aton.usuario.usuario.UsuarioModel;
+import br.com.cotil.aton.userInfo.UserInfoModel;
 
 @RestController
 @RequestMapping("/empresa")
@@ -21,11 +22,11 @@ public class EmpresaController {
 
   EmpresaRepository empresaRepository;
   EmpresaService empresaService;
-  AutenticadorUtils autenticadorUtils;
+  UserInfoService UserInfoService;
 
   @Autowired
-  public EmpresaController(AutenticadorUtils autenticadorUtils, EmpresaService empresaService) {
-    this.autenticadorUtils = autenticadorUtils;
+  public EmpresaController(UserInfoService UserInfoService, EmpresaService empresaService) {
+    this.UserInfoService = UserInfoService;
     this.empresaService = empresaService;
   }
 
@@ -33,7 +34,7 @@ public class EmpresaController {
   public Object getEmpresa(@RequestHeader("Key") String key)
       throws ForbiddenException, BadRequestException {
 
-    UserInfo userInfo = autenticadorUtils.getUserInfo(key);
+    UsuarioModel userInfo = UserInfoService.getUserInfo(key);
 
 
     return empresaService.getEmpresa(userInfo);
@@ -43,7 +44,7 @@ public class EmpresaController {
   public Object createEmpresa(@RequestHeader("Key") String key, @RequestBody EmpresaModel empresa)
       throws ForbiddenException, BadRequestException {
 
-    UserInfo userInfo = autenticadorUtils.getUserInfo(key);
+    UsuarioModel userInfo = UserInfoService.getUserInfo(key);
 
 
     return empresaService.createEmpresa(empresa, userInfo);
@@ -53,7 +54,7 @@ public class EmpresaController {
   public Object updateUsuarioCriador(@RequestHeader("Key") String key, @RequestBody EmpresaModel empresa)
       throws ForbiddenException, BadRequestException {
 
-    UserInfo userInfo = autenticadorUtils.getUserInfo(key);
+    UsuarioModel userInfo = UserInfoService.getUserInfo(key);
 
 
     return empresaService.updateUsuarioCriador(empresa, userInfo);

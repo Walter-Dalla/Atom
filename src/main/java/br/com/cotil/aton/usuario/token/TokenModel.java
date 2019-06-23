@@ -13,14 +13,15 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.cotil.aton.usuario.conexao.ConexaoModel;
 import br.com.cotil.aton.usuario.usuario.UsuarioModel;
 
 @Entity
-@Table(name = "CONEXAO")
+@Table(name = "TOKEN")
 @EntityListeners(AuditingEntityListener.class)
 public class TokenModel {
   
@@ -30,10 +31,12 @@ public class TokenModel {
 
   @OneToOne
   @JoinColumn(name = "ID_USUARIO")
-  private UsuarioModel usaurio;
+  @JsonIgnore
+  private UsuarioModel usuario;
   
   @OneToOne
   @JoinColumn(name = "ID_CONEXAO")
+  @JsonIgnore
   private ConexaoModel conexao;
 
   @Column(name = "TOKEN")
@@ -43,10 +46,6 @@ public class TokenModel {
   @Column(name = "DATA_CRIACAO")
   private Date dataCriacao;
 
-  @LastModifiedDate
-  @Column(name = "DATA_ATUALIZACAO")
-  private Date dataUltimaAtualizacao;
-
   public Integer getId() {
     return id;
   }
@@ -55,12 +54,12 @@ public class TokenModel {
     this.id = id;
   }
 
-  public UsuarioModel getUsaurio() {
-    return usaurio;
+  public UsuarioModel getUsuario() {
+    return usuario;
   }
 
-  public void setUsaurio(UsuarioModel usaurio) {
-    this.usaurio = usaurio;
+  public void setUsuario(UsuarioModel usuario) {
+    this.usuario = usuario;
   }
 
   public ConexaoModel getConexao() {
@@ -77,14 +76,6 @@ public class TokenModel {
 
   public void setDataCriacao(Date dataCriacao) {
     this.dataCriacao = dataCriacao;
-  }
-
-  public Date getDataUltimaAtualizacao() {
-    return dataUltimaAtualizacao;
-  }
-
-  public void setDataUltimaAtualizacao(Date dataUltimaAtualizacao) {
-    this.dataUltimaAtualizacao = dataUltimaAtualizacao;
   }
 
   public String getToken() {

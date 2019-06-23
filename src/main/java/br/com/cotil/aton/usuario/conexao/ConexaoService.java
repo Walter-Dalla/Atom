@@ -9,7 +9,6 @@ import br.com.cotil.aton.HttpException.BadRequestException;
 import br.com.cotil.aton.HttpException.ConflictException;
 import br.com.cotil.aton.usuario.token.TokenModel;
 import br.com.cotil.aton.usuario.token.TokenService;
-import br.com.cotil.aton.usuario.usuario.UsuarioModel;
 import br.com.cotil.aton.usuario.usuario.UsuarioRepository;
 
 @Service

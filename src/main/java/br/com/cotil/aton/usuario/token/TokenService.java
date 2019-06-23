@@ -1,82 +1,100 @@
 package br.com.cotil.aton.usuario.token;
 
-import java.security.Key;
-import java.security.NoSuchAlgorithmException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
-import javax.crypto.Cipher;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.SecretKeySpec;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.cotil.aton.HttpException.BadRequestException;
 import br.com.cotil.aton.usuario.conexao.ConexaoModel;
+import br.com.cotil.aton.usuario.conexao.ConexaoRepository;
+import br.com.cotil.aton.usuario.usuario.UsuarioModel;
 
 @Service
 public class TokenService {
 
+  TokenRepository tokenRepository;
+
+  ConexaoRepository conexaoRepository;
+
+
+
   public static String key = "Oi, Bom dia, Flor do dia";
+
+  @Autowired
+  public TokenService(TokenRepository tokenRepository, ConexaoRepository conexaoRepository) {
+    super();
+    this.tokenRepository = tokenRepository;
+    this.conexaoRepository = conexaoRepository;
+  }
 
   public TokenModel GerarToken(ConexaoModel conexaoModel) throws BadRequestException {
 
+    Optional<TokenModel> tokenDeAcessoOptional = tokenRepository.findByConexao(conexaoModel);
+
+    if (tokenDeAcessoOptional.isPresent())
+      return tokenDeAcessoOptional.get();
+
     String token;
 
-    token = conexaoModel.getNomeConexao() + ";" + conexaoModel.getId() + ";"
-        + conexaoModel.getUsaurio().getNome() + ";" + "Aton" + ZonedDateTime
+    token = conexaoModel.getId() + ";" + conexaoModel.getNomeConexao() + ";"
+        + conexaoModel.getUsaurio().getNome() + ";" + "Aton;" + ZonedDateTime
             .now(ZoneId.of("America/Sao_Paulo")).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
+    token = token.replaceAll(" ", "");
+
     TokenModel tokenAcesso = new TokenModel();
-    
+
     tokenAcesso.setConexao(conexaoModel);
-    tokenAcesso.setUsaurio(conexaoModel.getUsaurio());
-    
-    tokenAcesso.setToken(encriptar(token));
-    System.out.println(tokenAcesso.getToken());
-    System.out.println(dencriptar(tokenAcesso.getToken()));
+    tokenAcesso.setUsuario(conexaoModel.getUsaurio());
+
+    AES.setKey(key);
+
+    tokenAcesso.setToken(AES.encrypt(token, key));
+
+    tokenRepository.save(tokenAcesso);
+
     return tokenAcesso;
 
   }
 
-  public String encriptar(String text) throws BadRequestException {
-    try {
-      Cipher cipher = createCipher();
+  public UsuarioModel getDadosToken(String token) throws BadRequestException {
 
-      cipher.init(Cipher.ENCRYPT_MODE, createAesKey());
-      byte[] encrypted = cipher.doFinal(text.getBytes());
-      return encrypted.toString();
+    String dados = AES.decrypt(token, key);
 
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new BadRequestException("Erro ao gerar o token");
-    }
+    List<String> dadosList = Arrays.asList(dados.split(";"));
+
+    if (dadosList.size() != 5)
+      throw new BadRequestException("Token invalido");
+
+    
+    Optional<ConexaoModel> conexaoOptional =
+        conexaoRepository.findById(Integer.parseInt(dadosList.get(0)));
+
+    ValidaToken(conexaoOptional, dadosList);
+    
+    return conexaoOptional.get().getUsaurio();
   }
 
 
-  public String dencriptar(String text) throws BadRequestException {
-    try {
-      Cipher cipher = createCipher();
-      
-      cipher.init(Cipher.DECRYPT_MODE, createAesKey());
-      String decrypted = new String(cipher.doFinal(text.getBytes()));
-      
-      return decrypted;
-      
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new BadRequestException("Erro ao gerar o token");
-    }
-  }
+  private void ValidaToken(Optional<ConexaoModel> conexaoOptional, List<String> dadosList)
+      throws BadRequestException {
 
-  private Key createAesKey() {
-    return new SecretKeySpec(key.getBytes(), "AES");
-  }
+    if (!conexaoOptional.isPresent())
+      throw new BadRequestException("Token sem conexção ou expirado");
 
-  private Cipher createCipher() throws NoSuchAlgorithmException, NoSuchPaddingException {
-    return Cipher.getInstance("AES");
-  }
+    ConexaoModel conexao = conexaoOptional.get();
 
+    if (!dadosList.contains(conexao.getNomeConexao()))
+      throw new BadRequestException("Token sem conexção ou expirado");
+
+    if (!dadosList.contains("Aton"))
+      throw new BadRequestException("Token sem conexção ou expirado");
+  }
 
 }
