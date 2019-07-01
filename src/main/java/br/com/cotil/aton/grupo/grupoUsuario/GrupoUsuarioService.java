@@ -1,6 +1,7 @@
 package br.com.cotil.aton.grupo.grupoUsuario;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,6 @@ public class GrupoUsuarioService {
 
   @Autowired
   GrupoUsuarioRepository grupoUsuarioRepository;
-
 
   public List<GrupoUsuarioModel> getGruposUsuarios(UsuarioModel usuario)
       throws BadRequestException {
@@ -41,6 +41,11 @@ public class GrupoUsuarioService {
   public List<GrupoUsuarioModel> getUsuariosDoGrupo(GrupoModel grupoModel) {
 
     return grupoUsuarioRepository.findAllByGrupo(grupoModel.getId());
+  }
+
+
+  public Optional<GrupoUsuarioModel> getGrupousuarioByIdGrupoAndIdUsuario(Integer idGrupo, Integer idUsuario) {
+    return grupoUsuarioRepository.getGrupousuarioByIdGrupoAndIdUsuario(idGrupo, idUsuario);
   }
 
 }

@@ -1,6 +1,7 @@
 package br.com.cotil.aton.grupo.grupoUsuario;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,11 +13,21 @@ public interface GrupoUsuarioRepository extends JpaRepository<GrupoUsuarioModel,
 
   List<GrupoUsuarioModel> findAllById(Integer idGrupo);
 
-  @Query("select gum from GrupoUsuarioModel gum where gum.usuario.id = :usuarioId and gum.ativo = true")
+  @Query("select gum from GrupoUsuarioModel gum where gum.usuario.id = :usuarioId and gum.ativo = true and gum.grupo.ativo = true")
   List<GrupoUsuarioModel> findAllByUsuario(@Param("usuarioId") Integer id);
 
   @Query("select gum from GrupoUsuarioModel gum where gum.grupo.id = :grupoId and gum.ativo = true")
   List<GrupoUsuarioModel> findAllByGrupo(@Param("grupoId") Integer id);
+
+
+  @Query("select gum from GrupoUsuarioModel gum where gum.grupo.nome like :grupoNome and gum.usuario.id = :idUsuario")
+  Optional<GrupoUsuarioModel> findByUsuarioAndGrupoNome(@Param("idUsuario") Integer idUsuario,
+      @Param("grupoNome") String nome);
+
+  @Query("select gum from GrupoUsuarioModel gum where gum.grupo.id = :idGrupo "
+      + " and gum.usuario.id = :idUsuario")
+  Optional<GrupoUsuarioModel> getGrupousuarioByIdGrupoAndIdUsuario(
+      @Param("idGrupo") Integer idGrupo, @Param("idUsuario") Integer idUsuario);
 
 
 

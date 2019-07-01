@@ -55,14 +55,46 @@ public class GrupoService {
       throws BadRequestException {
 
     novoGrupo = validarGrupo(novoGrupo);
-    
+
     novoGrupo.setAtivo(true);
-    
+
     GrupoModel grupoSalvo = grupoRepository.save(novoGrupo);
 
     grupoUsuarioService.adicionarUsuarioEmGrupo(grupoSalvo, usuario);
 
     return grupoSalvo;
+  }
+
+
+
+  public GrupoModel updateGrupos(GrupoModel grupo, UsuarioModel usuario)
+      throws BadRequestException {
+
+    Optional<GrupoUsuarioModel> grupoNoBancoOptional =
+        grupoUsuarioService.getGrupousuarioByIdGrupoAndIdUsuario(grupo.getId(), usuario.getId());
+
+    if (!grupoNoBancoOptional.isPresent())
+      throw new BadRequestException("Grupo inexistente");
+
+    GrupoModel grupoNoBanco = grupoNoBancoOptional.get().getGrupo();
+
+    validarGrupo(grupo);
+
+    grupoNoBanco.setNome(grupo.getNome());
+
+    return grupoRepository.save(grupoNoBanco);
+  }
+
+  public GrupoModel deleteGrupo(Integer idGrupo, UsuarioModel usuario) throws BadRequestException {
+    Optional<GrupoUsuarioModel> grupoNoBancoOptional =
+        grupoUsuarioService.getGrupousuarioByIdGrupoAndIdUsuario(idGrupo, usuario.getId());
+
+    if (!grupoNoBancoOptional.isPresent())
+      throw new BadRequestException("Grupo inexistente");
+
+    GrupoModel grupo = grupoNoBancoOptional.get().getGrupo();
+    grupo.setAtivo(false);
+    return grupoRepository.save(grupo);
   }
 
   private GrupoModel validarGrupo(GrupoModel grupo) throws BadRequestException {
@@ -72,12 +104,4 @@ public class GrupoService {
 
     return grupo;
   }
-
-
-  public void updateGrupos(GrupoModel grupo, UsuarioModel userInfo) {
-
-
-
-  }
-
 }

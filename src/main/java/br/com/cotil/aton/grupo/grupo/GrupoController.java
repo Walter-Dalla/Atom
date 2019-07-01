@@ -3,7 +3,10 @@ package br.com.cotil.aton.grupo.grupo;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -33,8 +36,8 @@ public class GrupoController {
 
 
   @GetMapping
-  public Object getGrupo(HttpServletRequest request, @RequestHeader("Token") String token, Integer id)
-      throws BadRequestException {
+  public Object getGrupo(HttpServletRequest request, @RequestHeader("Token") String token,
+      Integer id) throws BadRequestException {
 
     UsuarioModel usuario =
         tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
@@ -52,5 +55,25 @@ public class GrupoController {
     return grupoService.createNewGrupo(usuario, novoGrupo);
   }
 
+  @PatchMapping
+  public GrupoModel updateGrupo(HttpServletRequest request, @RequestHeader("Token") String token,
+      @RequestBody GrupoModel novoGrupo) throws BadRequestException {
 
+    UsuarioModel usuario =
+        tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+
+    return grupoService.updateGrupos(novoGrupo, usuario);
+  }
+
+  
+  @DeleteMapping("/{id}")
+  public GrupoModel updateGrupo(HttpServletRequest request, @RequestHeader("Token") String token,
+      @PathVariable("id") Integer idGrupo) throws BadRequestException {
+
+    UsuarioModel usuario =
+        tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+
+    return grupoService.deleteGrupo(idGrupo, usuario);
+  }
+  
 }
