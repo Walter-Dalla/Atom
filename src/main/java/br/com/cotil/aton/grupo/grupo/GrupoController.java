@@ -1,0 +1,56 @@
+package br.com.cotil.aton.grupo.grupo;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.com.cotil.aton.HttpException.BadRequestException;
+import br.com.cotil.aton.usuario.token.TokenService;
+import br.com.cotil.aton.usuario.usuario.UsuarioModel;
+import br.com.cotil.aton.util.RequestUtils;
+
+@RestController
+@RequestMapping("/grupo")
+public class GrupoController {
+
+
+  TokenService tokenService;
+  GrupoService grupoService;
+
+  @Autowired
+  public GrupoController(TokenService tokenService, GrupoService grupoService) {
+    super();
+    this.tokenService = tokenService;
+    this.grupoService = grupoService;
+  }
+
+
+
+  @GetMapping
+  public Object getGrupo(HttpServletRequest request, @RequestHeader("Token") String token, Integer id)
+      throws BadRequestException {
+
+    UsuarioModel usuario =
+        tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+
+    return grupoService.getGrupos(usuario, id);
+  }
+
+  @PostMapping
+  public GrupoModel createNewGrupo(HttpServletRequest request, @RequestHeader("Token") String token,
+      @RequestBody GrupoModel novoGrupo) throws BadRequestException {
+
+    UsuarioModel usuario =
+        tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+
+    return grupoService.createNewGrupo(usuario, novoGrupo);
+  }
+
+
+}

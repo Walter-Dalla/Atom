@@ -1,4 +1,4 @@
-package br.com.cotil.aton.campo.grupo;
+package br.com.cotil.aton.grupo;
 
 public class GrupoConstantes {
 

@@ -11,8 +11,8 @@ import javax.persistence.Table;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import br.com.cotil.aton.campo.grupo.GrupoModel;
 import br.com.cotil.aton.formularios.formulario.FormularioModel;
+import br.com.cotil.aton.grupo.grupo.GrupoModel;
 import br.com.cotil.aton.nivelPermissao.nivelPermissaoModel;
 
 @Entity
