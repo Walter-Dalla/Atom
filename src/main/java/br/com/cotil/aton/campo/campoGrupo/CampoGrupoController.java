@@ -17,7 +17,7 @@ import br.com.cotil.aton.usuario.usuario.UsuarioModel;
 import br.com.cotil.aton.util.RequestUtils;
 
 @RestController
-@RequestMapping("/campo/customizado")
+@RequestMapping("/campo/grupo")
 public class CampoGrupoController {
 
   CampoGrupoService campoGrupoService;
