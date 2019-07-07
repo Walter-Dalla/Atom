@@ -12,8 +12,10 @@ public interface FormularioRepository extends JpaRepository<FormularioModel, Int
 
 	@Query("select fm from FormularioModel fm where (fm.nomeFormulario like :nomeFormulario or :nomeFormulario is null)"
 			+ " and (fm.usuario.id = :idUsuario)"
-			+ " and (fm.id = :id or :id is null)")
-	List<FormularioModel> findByIdAndNomeFormularioAndIdUsuario(@Param("id") Integer id,
-			@Param("nomeFormulario") String nomeFormulario, @Param("idUsuario") Integer idUsuario);
+			+ " and (fm.id = :id or :id is null)"
+			+ " and (fm.ativo = :ativo or :ativo is null)")
+	List<FormularioModel> findByIdAndNomeFormularioAndIdUsuarioAndAtivo(@Param("id") Integer id,
+			@Param("nomeFormulario") String nomeFormulario, @Param("idUsuario") Integer idUsuario,
+			@Param("ativo") boolean ativo);
 
 }
