@@ -1,5 +1,7 @@
 package br.com.cotil.aton.usuario.usuario;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,11 @@ public class UsuarioService {
   public UsuarioModel getUser(String token, String ip) throws BadRequestException {
 
     return tokenService.getDadosToken(token, ip);
+  }
+
+  public Optional<UsuarioModel> getUser(Integer idUsuario) throws BadRequestException {
+
+    return usuarioRepository.findById(idUsuario);
   }
 
   public UsuarioModel alterUser(String token, UsuarioModel usuarioAlterado, String ip)

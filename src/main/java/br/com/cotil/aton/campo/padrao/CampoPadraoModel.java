@@ -17,29 +17,30 @@ public class CampoPadraoModel {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  Integer idCampoPadrao;
+  private Integer id;
 
   @Column(name = "NOME")
-  String nome;
-  
-  @Column(name = "TIPO")
-  String tipo;
-  
-  @Column(name = "DESCRICAO")
-  String descricao;
-  
-  @Column(name = "TOOL_TIP")
-  String toolTip;
-  
-  @Column(name = "PLACE_HOLDER")
-  String placeHolder;
+  private String nome;
 
-  public Integer getIdCampoPadrao() {
-    return idCampoPadrao;
+  @Column(name = "TIPO")
+  private String tipo;
+
+  @Column(name = "DESCRICAO")
+  private String descricao;
+
+  @Column(name = "TOOL_TIP")
+  private String toolTip;
+
+  @Column(name = "PLACE_HOLDER")
+  private String placeHolder;
+  
+
+  public Integer getId() {
+    return id;
   }
 
-  public void setIdCampoPadrao(Integer idCampoPadrao) {
-    this.idCampoPadrao = idCampoPadrao;
+  public void setId(Integer id) {
+    this.id = id;
   }
 
   public String getNome() {
@@ -81,11 +82,5 @@ public class CampoPadraoModel {
   public void setPlaceHolder(String placeHolder) {
     this.placeHolder = placeHolder;
   }
-
-  @Override
-  public String toString() {
-    return "CampoPadraoModel [idCampoPadrao=" + idCampoPadrao + ", nome=" + nome + ", tipo=" + tipo
-        + ", descricao=" + descricao + ", toolTip=" + toolTip + ", placeHolder=" + placeHolder
-        + "]";
-  }
+  
 }

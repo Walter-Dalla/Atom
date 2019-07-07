@@ -1,6 +1,6 @@
 package br.com.cotil.aton.campo.customisado;
 
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -57,6 +57,9 @@ public class CampoCustomizadoModel {
   @Column(name = "PLACE_HOLDER")
   private String placeHolder;
 
+  @Column(name = "ATIVO")
+  private boolean ativo;
+  
   public Integer getId() {
     return id;
   }
@@ -129,11 +132,11 @@ public class CampoCustomizadoModel {
     this.placeHolder = placeHolder;
   }
 
-  @Override
-  public String toString() {
-    return "CampoCustomizadoModel [id=" + id + ", usuario=" + usuario + ", campoPadrao="
-        + campoPadrao + ", nome=" + nome + ", dataCriacao=" + dataCriacao + ", dataAlteracao="
-        + dataAlteracao + ", descricao=" + descricao + ", toolTip=" + toolTip + ", placeHolder="
-        + placeHolder + "]";
+  public boolean isAtivo() {
+    return ativo;
+  }
+
+  public void setAtivo(boolean ativo) {
+    this.ativo = ativo;
   }
 }

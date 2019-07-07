@@ -6,12 +6,12 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.cotil.aton.Utils;
 import br.com.cotil.aton.HttpException.BadRequestException;
 import br.com.cotil.aton.grupo.GrupoConstantes;
 import br.com.cotil.aton.grupo.grupoUsuario.GrupoUsuarioModel;
 import br.com.cotil.aton.grupo.grupoUsuario.GrupoUsuarioService;
 import br.com.cotil.aton.usuario.usuario.UsuarioModel;
+import br.com.cotil.aton.util.Utils;
 
 @Service
 public class GrupoService {
@@ -57,6 +57,8 @@ public class GrupoService {
     novoGrupo = validarGrupo(novoGrupo);
 
     novoGrupo.setAtivo(true);
+    
+    novoGrupo.setUsuario(usuario);
 
     GrupoModel grupoSalvo = grupoRepository.save(novoGrupo);
 

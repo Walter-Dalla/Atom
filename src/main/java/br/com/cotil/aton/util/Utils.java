@@ -1,4 +1,4 @@
-package br.com.cotil.aton;
+package br.com.cotil.aton.util;
 
 public class Utils {
   

@@ -16,8 +16,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import br.com.cotil.aton.grupo.grupo.GrupoModel;
 import br.com.cotil.aton.usuario.usuario.UsuarioModel;
 
@@ -35,7 +33,6 @@ public class GrupoUsuarioModel {
   GrupoModel grupo;
 
   @OneToOne
-  @JsonIgnore
   @JoinColumn(name = "ID_USUARIO")
   UsuarioModel usuario;
 

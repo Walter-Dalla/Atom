@@ -8,11 +8,17 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import br.com.cotil.aton.usuario.usuario.UsuarioModel;
 
 @Entity
 @Table(name = "GRUPO")
@@ -32,6 +38,11 @@ public class GrupoModel {
 
   @Column(name = "ATIVO")
   boolean ativo;
+
+  @OneToOne
+  @JsonIgnore
+  @JoinColumn(name = "ID_USUARIO")
+  UsuarioModel usuario;
 
   @CreatedDate
   @Column(name = "DATA_CRIACAO", updatable = false)
@@ -88,6 +99,15 @@ public class GrupoModel {
   public void setAtivo(boolean ativo) {
     this.ativo = ativo;
   }
+
+  public UsuarioModel getUsuario() {
+    return usuario;
+  }
+
+  public void setUsuario(UsuarioModel usuario) {
+    this.usuario = usuario;
+  }
+
 
 
 }

@@ -8,6 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import br.com.cotil.aton.grupo.grupo.GrupoModel;
+import br.com.cotil.aton.usuario.usuario.UsuarioModel;
+
 @Repository
 public interface GrupoUsuarioRepository extends JpaRepository<GrupoUsuarioModel, Integer> {
 
@@ -28,6 +31,10 @@ public interface GrupoUsuarioRepository extends JpaRepository<GrupoUsuarioModel,
       + " and gum.usuario.id = :idUsuario")
   Optional<GrupoUsuarioModel> getGrupousuarioByIdGrupoAndIdUsuario(
       @Param("idGrupo") Integer idGrupo, @Param("idUsuario") Integer idUsuario);
+
+  void findByGrupoAndUsuario(UsuarioModel usuario, GrupoModel grupo);
+
+  Optional<GrupoModel> findByGrupo(GrupoModel grupo);
 
 
 
