@@ -11,14 +11,15 @@ import br.com.cotil.aton.usuario.usuario.UsuarioModel;
 @Service
 public class FormularioAcessoService {
 
-	private GrupoUsuarioRepository grupoUsuarioRepository;
+  private GrupoUsuarioRepository grupoUsuarioRepository;
 
-	public List<FormularioAcesso> listraGruposUsuario(UsuarioModel usuario, Integer idGrupo, String nomeGrupo,
-			String nomeFormulario) {
+  public List<FormularioAcesso> listraGruposUsuario(UsuarioModel usuario, Integer idGrupo,
+      String nomeGrupo, String nomeFormulario) {
 
-		List<> listaGruposUsuario = grupoUsuarioRepository.findAllByUsuario(usuario.getId());
-		
-		return listaGruposUsuario;
-	}
+    List<GrupoUsuarioModel> listaGruposUsuario =
+        grupoUsuarioRepository.findAllByUsuario(usuario.getId());
+
+    return null;
+  }
 
 }
