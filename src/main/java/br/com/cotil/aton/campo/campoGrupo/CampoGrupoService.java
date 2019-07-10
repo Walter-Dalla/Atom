@@ -1,10 +1,11 @@
 package br.com.cotil.aton.campo.campoGrupo;
 
-import java.awt.print.Pageable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.domain.PageRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import br.com.cotil.aton.HttpException.BadRequestException;
@@ -12,47 +13,79 @@ import br.com.cotil.aton.HttpException.ForbiddenException;
 import br.com.cotil.aton.campo.customisado.CampoCustomizadoModel;
 import br.com.cotil.aton.campo.customisado.CampoCustomizadoRepository;
 import br.com.cotil.aton.grupo.grupo.GrupoModel;
-import br.com.cotil.aton.grupo.grupo.GrupoRepository;
+import br.com.cotil.aton.grupo.grupoUsuario.GrupoUsuarioModel;
+import br.com.cotil.aton.grupo.grupoUsuario.GrupoUsuarioRepository;
 import br.com.cotil.aton.usuario.usuario.UsuarioModel;
+import br.com.cotil.aton.util.Utils;
 
 @Service
 public class CampoGrupoService {
 
 
   private CampoGrupoRepository campoGrupoRepository;
-  private GrupoRepository grupoRepository;
+  private GrupoUsuarioRepository grupoUsuarioRepository;
   private CampoCustomizadoRepository campoCustomizadoRepository;
 
-  public CampoGrupoService(CampoGrupoRepository campoGrupoRepository) {
-    super();
+  @Autowired
+  public CampoGrupoService(CampoGrupoRepository campoGrupoRepository,
+      GrupoUsuarioRepository grupoUsuarioRepository,
+      CampoCustomizadoRepository campoCustomizadoRepository) {
     this.campoGrupoRepository = campoGrupoRepository;
+    this.grupoUsuarioRepository = grupoUsuarioRepository;
+    this.campoCustomizadoRepository = campoCustomizadoRepository;
   }
 
-  public List<CampoCustomizadoModel> getCamposDosGruposDoUsuario(UsuarioModel usuario, Integer idGrupo, String nomeGrupo, String descricaoGrupo, Integer idCampo, String nomeCampo, String descricaoCampo) {
+  public Page<CampoGrupoModel> getCamposDosGruposDoUsuario(UsuarioModel usuario, Integer idGrupo,
+      String nomeGrupo, String descricaoGrupo, Integer idCampo, String nomeCampo,
+      String descricaoCampo, boolean ativo, Integer page, Integer size) {
 
-//    Pageable pageable = PageRequest.of(0, 10);
-//    
-//    campoGrupoRepository.findByIdCampoAndNomeCampoAndDescricaoCampoAndIdGrupoAndNomeGrupoAndDescricaoGrupo(
-//        idCampo, nomeCampo, descricaoCampo, idGrupo, nomeGrupo, descricaoGrupo, pageable);
+    List<GrupoUsuarioModel> listaDeGruposDoUsuario =
+        grupoUsuarioRepository.findAllByUsuario(usuario.getId());
 
+    List<Integer> listaDeIdDosGruposDoUsuario = new ArrayList<Integer>();
 
-    return null;
+    listaDeGruposDoUsuario.forEach(GrupoDoUsuario -> {
+      listaDeIdDosGruposDoUsuario.add(GrupoDoUsuario.getGrupo().getId());
+    });
+
+    return campoGrupoRepository
+        .findByIdCampoAndNomeCampoAndDescricaoCampoAndIdGrupoAndNomeGrupoAndDescricaoGrupo(idCampo,
+            nomeCampo, descricaoCampo, idGrupo, nomeGrupo, descricaoGrupo,
+            listaDeIdDosGruposDoUsuario, ativo, Utils.setPageRequestConfig(page, size));
+
   }
 
-  public CampoGrupoModel createConexaoEntreCampoEGrupo(UsuarioModel usuario,
-      CampoCustomizadoModel campo, GrupoModel grupo)
+  public CampoGrupoModel autorizarCampoParaUmGrupo(UsuarioModel usuario, CampoGrupoModel campoGrupo)
       throws BadRequestException, ForbiddenException {
 
-    grupo = validarGrupo(grupo, usuario);
-    campo = validarCampo(campo, usuario);
-
-    CampoGrupoModel campoGrupo = new CampoGrupoModel();
-
-    campoGrupo.setCampoCustomizado(campo);
-    campoGrupo.setGrupo(grupo);
+    campoGrupo.setCampo(validarCampo(campoGrupo.getCampo(), usuario));
+    campoGrupo.setGrupo(validarGrupo(campoGrupo.getGrupo(), usuario));
     // campoGrupo.setNivelPermissao(nivelPermissao);
     campoGrupo.setAtivo(true);
     return campoGrupoRepository.save(campoGrupo);
+  }
+
+  public CampoGrupoModel desativarCampoParaUmGrupo(UsuarioModel usuario, Integer idCampoGrupo)
+      throws BadRequestException, ForbiddenException {
+
+    CampoGrupoModel campoGrupoBanco = pegarCampoGrupoNoBanco(idCampoGrupo);
+
+    if (campoGrupoBanco.getCampo().getUsuario().getId() != usuario.getId())
+      throw new ForbiddenException("Você não é dono deste campo");
+
+    campoGrupoBanco.setAtivo(false);
+
+    return campoGrupoRepository.save(campoGrupoBanco);
+  }
+
+  private CampoGrupoModel pegarCampoGrupoNoBanco(Integer idCampoGrupo) throws BadRequestException {
+
+    Optional<CampoGrupoModel> campoGrupo = campoGrupoRepository.findById(idCampoGrupo);
+
+    if (!campoGrupo.isPresent())
+      throw new BadRequestException("Grupo inexistente");
+
+    return campoGrupo.get();
   }
 
   private CampoCustomizadoModel validarCampo(CampoCustomizadoModel campo, UsuarioModel usuario)
@@ -73,15 +106,13 @@ public class CampoGrupoService {
   private GrupoModel validarGrupo(GrupoModel grupo, UsuarioModel usuario)
       throws BadRequestException, ForbiddenException {
 
-    Optional<GrupoModel> grupoOptional = grupoRepository.findById(grupo.getId());
+    Optional<GrupoUsuarioModel> grupousuarioOptional =
+        grupoUsuarioRepository.getGrupousuarioByIdGrupoAndIdUsuario(grupo.getId(), usuario.getId());
 
-    if (!grupoOptional.isPresent())
-      throw new BadRequestException("Grupo inexistente");
+    if (!grupousuarioOptional.isPresent())
+      throw new BadRequestException("Grupo inexistente ou voce não faz parte deste grupo");
 
-    if (grupoOptional.get().getUsuario().getId() != usuario.getId())
-      throw new ForbiddenException("Você não tem permissao para o grupo");
-
-    return grupoOptional.get();
+    return grupousuarioOptional.get().getGrupo();
   }
 
 

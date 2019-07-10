@@ -32,7 +32,7 @@ public interface GrupoUsuarioRepository extends JpaRepository<GrupoUsuarioModel,
   Optional<GrupoUsuarioModel> getGrupousuarioByIdGrupoAndIdUsuario(
       @Param("idGrupo") Integer idGrupo, @Param("idUsuario") Integer idUsuario);
 
-  void findByGrupoAndUsuario(UsuarioModel usuario, GrupoModel grupo);
+  Optional<GrupoUsuarioModel> findByGrupoAndUsuario(UsuarioModel usuario, GrupoModel grupo);
 
   Optional<GrupoModel> findByGrupo(GrupoModel grupo);
 

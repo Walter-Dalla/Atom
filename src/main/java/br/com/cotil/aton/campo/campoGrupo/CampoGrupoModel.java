@@ -31,7 +31,7 @@ public class CampoGrupoModel {
 
   @OneToOne
   @JoinColumn(name = "ID_CAMPO_CUSTOMIZADO")
-  CampoCustomizadoModel campoCustomizado;
+  CampoCustomizadoModel campo;
 
   @OneToOne
   @JoinColumn(name = "ID_GRUPO")
@@ -60,12 +60,12 @@ public class CampoGrupoModel {
     this.id = id;
   }
 
-  public CampoCustomizadoModel getCampoCustomizado() {
-    return campoCustomizado;
+  public CampoCustomizadoModel getCampo() {
+    return campo;
   }
 
-  public void setCampoCustomizado(CampoCustomizadoModel campoCustomizado) {
-    this.campoCustomizado = campoCustomizado;
+  public void setCampo(CampoCustomizadoModel campo) {
+    this.campo = campo;
   }
 
   public nivelPermissaoModel getNivelPermissao() {
@@ -107,4 +107,6 @@ public class CampoGrupoModel {
   public void setDataAlteracao(Date dataAlteracao) {
     this.dataAlteracao = dataAlteracao;
   }
+  
+  
 }
