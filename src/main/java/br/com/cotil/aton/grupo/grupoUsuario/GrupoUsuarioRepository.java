@@ -36,6 +36,9 @@ public interface GrupoUsuarioRepository extends JpaRepository<GrupoUsuarioModel,
 
   Optional<GrupoModel> findByGrupo(GrupoModel grupo);
 
+  @Query("select gum.grupo.id from GrupoUsuarioModel gum where gum.usuario.id = :usuarioId and gum.ativo = true and gum.grupo.ativo = true")
+  List<Integer> findAllIdGrupoByUsuario(@Param("usuarioId") Integer usuarioId);
+
 
 
 }

@@ -94,7 +94,7 @@ public class CampoCustomizadoService {
 
   // ------ Validações e padronizações ------\\
 
-  private CampoCustomizadoModel validaSeCampoExiste(Integer idCampo) throws BadRequestException {
+  public CampoCustomizadoModel validaSeCampoExiste(Integer idCampo) throws BadRequestException {
     Optional<CampoCustomizadoModel> campoCustomizadoOptional =
         campoCustomizadoRepository.findById(idCampo);
     if (!campoCustomizadoOptional.isPresent())
@@ -103,7 +103,7 @@ public class CampoCustomizadoService {
     return campoCustomizadoOptional.get();
   }
 
-  private void validaIsDono(CampoCustomizadoModel campo, UsuarioModel usuario)
+  public void validaIsDono(CampoCustomizadoModel campo, UsuarioModel usuario)
       throws ForbiddenException {
     if (campo.getUsuario().getId() != usuario.getId())
       throw new ForbiddenException("Sem autorização para atualizar esse campo");

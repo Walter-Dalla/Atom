@@ -29,15 +29,25 @@ public class GrupoUsuarioService extends GrupoUsuarioConstantes {
     this.usuarioService = usuarioService;
     this.grupoRepository = grupoRepository;
   }
-
-
-  public List<GrupoUsuarioModel> getGruposUsuarios(UsuarioModel usuario)
+  
+  public List<GrupoUsuarioModel> getAllGruposDoUsuario(UsuarioModel usuario)
       throws BadRequestException {
 
 
-    List<GrupoUsuarioModel> grupoList = grupoUsuarioRepository.findAllByUsuario(usuario.getId());
+    List<GrupoUsuarioModel> grupoUsuarioList = grupoUsuarioRepository.findAllByUsuario(usuario.getId());
 
-    return grupoList;
+    return grupoUsuarioList;
+  }
+
+  public List<Integer> getAllIdGruposDoUsuario(UsuarioModel usuario) throws BadRequestException, ForbiddenException {
+    
+    List<Integer>  listaIdsGrupos= grupoUsuarioRepository.findAllIdGrupoByUsuario(usuario.getId());
+    
+    if (listaIdsGrupos.isEmpty())
+      throw new ForbiddenException("Você não possui acesso a esse formulario");
+    
+    
+    return listaIdsGrupos;
   }
 
 
@@ -126,11 +136,11 @@ public class GrupoUsuarioService extends GrupoUsuarioConstantes {
         throw new ForbiddenException(USUARIO_JA_PRESENTE);
 
       grupoUsuario.setAtivo(true);
-    }else {
+    } else {
 
-    grupoUsuario.setGrupo(grupo);
-    grupoUsuario.setUsuario(usuarioParceiro);
-    grupoUsuario.setAtivo(true);
+      grupoUsuario.setGrupo(grupo);
+      grupoUsuario.setUsuario(usuarioParceiro);
+      grupoUsuario.setAtivo(true);
     }
     return grupoUsuarioRepository.save(grupoUsuario);
   }

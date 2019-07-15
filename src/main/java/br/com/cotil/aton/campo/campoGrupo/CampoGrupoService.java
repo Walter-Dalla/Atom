@@ -115,6 +115,15 @@ public class CampoGrupoService {
     return grupousuarioOptional.get().getGrupo();
   }
 
+  public List<CampoGrupoModel> validaAutorizacaoDoCampoParaGrupo(Integer idCampo, List<Integer> idsGruposList)
+      throws ForbiddenException {
+    List<CampoGrupoModel> campoGrupoModelList =
+        campoGrupoRepository.findByIdCampoAndIdsGrupo(idCampo, idsGruposList);
+    if (campoGrupoModelList.isEmpty())
+      throw new ForbiddenException("Você não possui acesso a esse formulario");
+    return campoGrupoModelList;
+  }
+
 
 
 }

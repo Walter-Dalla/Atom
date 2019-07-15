@@ -14,67 +14,76 @@ import br.com.cotil.aton.util.Utils;
 @Service
 public class FormularioService {
 
-	FormularioRepository formularioRepository;
+  FormularioRepository formularioRepository;
 
-	@Autowired
-	public FormularioService(FormularioRepository formularioRepository) {
-		super();
-		this.formularioRepository = formularioRepository;
-	}
+  @Autowired
+  public FormularioService(FormularioRepository formularioRepository) {
+    super();
+    this.formularioRepository = formularioRepository;
+  }
 
-	public List<FormularioModel> listaFormularios(UsuarioModel usuario, Integer id, String nomeFormulario, boolean ativo) {
+  public List<FormularioModel> listaFormularios(UsuarioModel usuario, Integer id,
+      String nomeFormulario, boolean ativo) {
 
-		List<FormularioModel> lista = formularioRepository.findByIdAndNomeFormularioAndIdUsuarioAndAtivo(id, nomeFormulario,
-				usuario.getId(), ativo);
+    List<FormularioModel> lista = formularioRepository
+        .findByIdAndNomeFormularioAndIdUsuarioAndAtivo(id, nomeFormulario, usuario.getId(), ativo);
 
-		return lista;
-	}
+    return lista;
+  }
 
-	public FormularioModel criaFormulario(UsuarioModel usuario, FormularioModel formulario) throws BadRequestException {
+  public FormularioModel criaFormulario(UsuarioModel usuario, FormularioModel formulario)
+      throws BadRequestException {
 
-		if (Utils.isNullOrEmpty(formulario.getNomeFormulario()))
-			throw new BadRequestException("Formulário precisa de nome!");
+    if (Utils.isNullOrEmpty(formulario.getNomeFormulario()))
+      throw new BadRequestException("Formulário precisa de nome!");
 
-		formulario.setUsuario(usuario);
-		formulario.setAtivo(true);
+    formulario.setUsuario(usuario);
+    formulario.setAtivo(true);
 
-		return formularioRepository.save(formulario);
-	}
+    return formularioRepository.save(formulario);
+  }
 
-	public FormularioModel atualizaFormulario(UsuarioModel usuario, FormularioModel formulario)
-			throws BadRequestException, ForbiddenException {
+  public FormularioModel atualizaFormulario(UsuarioModel usuario, FormularioModel formulario)
+      throws BadRequestException, ForbiddenException {
 
-		Optional<FormularioModel> formularioOptional = formularioRepository.findById(formulario.getId());
+    Optional<FormularioModel> formularioOptional =
+        formularioRepository.findById(formulario.getId());
 
-		if (!formularioOptional.isPresent())
-			throw new BadRequestException("Formulário Inexistente!");
+    if (!formularioOptional.isPresent())
+      throw new BadRequestException("Formulário Inexistente!");
 
-		FormularioModel formularioExistenteBD = formularioOptional.get();
+    FormularioModel formularioExistenteBD = formularioOptional.get();
 
-		if (formularioExistenteBD.getUsuario().getId() != usuario.getId())
-			throw new ForbiddenException("Usuário Inválido!");
+    if (formularioExistenteBD.getUsuario().getId() != usuario.getId())
+      throw new ForbiddenException("Usuário Inválido!");
 
-		formularioExistenteBD.setNomeFormulario(formulario.getNomeFormulario());
-		formularioExistenteBD.setCompartilhavel(formulario.isCompartilhavel());
+    formularioExistenteBD.setNomeFormulario(formulario.getNomeFormulario());
+    formularioExistenteBD.setCompartilhavel(formulario.isCompartilhavel());
 
-		return formularioRepository.save(formularioExistenteBD);
-	}
+    return formularioRepository.save(formularioExistenteBD);
+  }
 
-	public FormularioModel desabilitaFormulario(Integer idFormulario, UsuarioModel usuario) throws BadRequestException, ForbiddenException {
-		
-		Optional<FormularioModel> formularioOptional = formularioRepository.findById(idFormulario);
-		
-		if (!formularioOptional.isPresent())
-			throw new BadRequestException("Formulário Inexistente!");
-		
-		FormularioModel formularioExistenteBD = formularioOptional.get();
-		
-		if (formularioExistenteBD.getUsuario().getId() != usuario.getId())
-			throw new ForbiddenException("Usuário Inválido!");
+  public FormularioModel desabilitaFormulario(Integer idFormulario, UsuarioModel usuario)
+      throws BadRequestException, ForbiddenException {
 
-		formularioExistenteBD.setAtivo(false);
-		
-		return formularioRepository.save(formularioExistenteBD);
-	}
+    FormularioModel formularioExistenteBD = pegaFormularioDoBanco(idFormulario);
+
+    if (formularioExistenteBD.getUsuario().getId() != usuario.getId())
+      throw new ForbiddenException("Usuário Inválido!");
+
+    formularioExistenteBD.setAtivo(false);
+
+    return formularioRepository.save(formularioExistenteBD);
+  }
+
+  public FormularioModel pegaFormularioDoBanco(Integer idFormulario) throws BadRequestException {
+    Optional<FormularioModel> formularioOptional = formularioRepository.findById(idFormulario);
+
+    if (!formularioOptional.isPresent())
+      throw new BadRequestException("Formulario inexistente");
+
+    return formularioOptional.get();
+  }
+
 
 }

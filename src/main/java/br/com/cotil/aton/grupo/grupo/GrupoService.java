@@ -33,7 +33,7 @@ public class GrupoService {
       throws BadRequestException {
 
     if (id == null) {
-      List<GrupoUsuarioModel> grupoList = grupoUsuarioService.getGruposUsuarios(usuario);
+      List<GrupoUsuarioModel> grupoList = grupoUsuarioService.getAllGruposDoUsuario(usuario);
 
       if (grupoList.isEmpty())
         throw new BadRequestException(GrupoConstantes.GRUPO_NÃO_EXISTE);

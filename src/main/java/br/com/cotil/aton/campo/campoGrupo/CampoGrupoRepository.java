@@ -27,4 +27,9 @@ public interface CampoGrupoRepository extends JpaRepository<CampoGrupoModel, Int
       @Param("idsDosGruoposDoUsuario") List<Integer> idsDosGruoposDoUsuario,
       @Param("ativo") boolean ativo, Pageable pageable);
 
+
+  @Query("select cgm from CampoGrupoModel cgm where cgm.campo.id = :idCampo and cgm.grupo.id in :idsGruposList")
+  List<CampoGrupoModel> findByIdCampoAndIdsGrupo(@Param("idCampo") Integer idCampo,
+      @Param("idsGruposList") List<Integer> idsGruposList);
+
 }

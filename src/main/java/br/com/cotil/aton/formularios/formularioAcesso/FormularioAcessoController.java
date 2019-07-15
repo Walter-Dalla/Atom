@@ -25,7 +25,7 @@ public class FormularioAcessoController {
 	FormularioAcessoService formularioAcessoService;
 
 	@GetMapping
-	public List<FormularioAcesso> listaGruposUsuario(HttpServletRequest request, @RequestHeader("Token") String token,
+	public List<FormularioAcessoModel> listaGruposUsuario(HttpServletRequest request, @RequestHeader("Token") String token,
 			@RequestParam(value = "idGrupo", required = false) Integer idGrupo,
 			@RequestParam(value = "nomeGrupo", required = false) String nomeGrupo,
 			@RequestParam(value = "nomeFormulario", required = false) String nomeFormulario)
@@ -38,7 +38,7 @@ public class FormularioAcessoController {
 	}
 
 	@PostMapping
-	public FormularioAcesso criaFormularioAcesso(HttpServletRequest request, @RequestHeader("Token") String token,
+	public FormularioAcessoModel criaFormularioAcesso(HttpServletRequest request, @RequestHeader("Token") String token,
 			@RequestParam(value = "idUsuario", required = false) Integer idUsuario,
 			@RequestParam(value = "idGrupo", required = false) Integer idGrupo) {
 

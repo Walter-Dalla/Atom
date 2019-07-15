@@ -18,7 +18,7 @@ import br.com.cotil.aton.nivelPermissao.nivelPermissaoModel;
 @Entity
 @Table(name = "FORMULARIO_ACESSO")
 @EntityListeners(AuditingEntityListener.class)
-public class FormularioAcesso {
+public class FormularioAcessoModel {
 
 
   @Id
@@ -37,4 +37,38 @@ public class FormularioAcesso {
   @JoinColumn(name = "ID_NIVEL_PERMISSAO")
   nivelPermissaoModel nivelPermissao;
 
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  public GrupoModel getGrupo() {
+    return grupo;
+  }
+
+  public void setGrupo(GrupoModel grupo) {
+    this.grupo = grupo;
+  }
+
+  public FormularioModel getFormulario() {
+    return formulario;
+  }
+
+  public void setFormulario(FormularioModel formulario) {
+    this.formulario = formulario;
+  }
+
+  public nivelPermissaoModel getNivelPermissao() {
+    return nivelPermissao;
+  }
+
+  public void setNivelPermissao(nivelPermissaoModel nivelPermissao) {
+    this.nivelPermissao = nivelPermissao;
+  }
+
+  
+  
 }
