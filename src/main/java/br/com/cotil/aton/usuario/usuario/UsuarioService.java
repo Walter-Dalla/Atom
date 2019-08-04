@@ -23,32 +23,23 @@ public class UsuarioService {
     this.usuarioRepository = usuarioRepository;
   }
 
-  public UsuarioModel getUser(String token, String ip) throws BadRequestException {
-
-    return tokenService.getDadosToken(token, ip);
-  }
-
-  public Optional<UsuarioModel> getUser(Integer idUsuario) throws BadRequestException {
+  public Optional<UsuarioModel> getUsuarioById(Integer idUsuario) throws BadRequestException {
 
     return usuarioRepository.findById(idUsuario);
   }
 
-  public UsuarioModel alterUser(String token, UsuarioModel usuarioAlterado, String ip)
+  public UsuarioModel alterUser(String token, UsuarioModel usuarioAlterado, UsuarioModel usuario)
       throws BadRequestException, UnauthorizedException {
 
-    UsuarioModel usuario = tokenService.getDadosToken(token, ip);
+    usuario.setEmail(usuarioAlterado.getEmail());
+    usuario.setNome(usuarioAlterado.getNome());
 
-    if (usuarioAlterado.getId() != usuario.getId())
-      throw new UnauthorizedException("Sem autorização para alterar outro usuario");
-
-    usuarioAlterado.setId(usuario.getId());
-
-    return usuarioRepository.saveAndFlush(usuarioAlterado);
+    return usuarioRepository.saveAndFlush(usuario);
   }
 
   public UsuarioModel desativarUsuario(String token, String ip) throws BadRequestException {
 
-    UsuarioModel usuario = tokenService.getDadosToken(token, ip);
+    UsuarioModel usuario = tokenService.getUsuarioByToken(token, ip);
 
     usuario.setAtivo(false);
 

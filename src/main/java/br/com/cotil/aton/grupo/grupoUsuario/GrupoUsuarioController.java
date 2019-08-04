@@ -45,7 +45,7 @@ public class GrupoUsuarioController {
       throws BadRequestException, ForbiddenException {
 
     UsuarioModel usuario =
-        tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
     return grupoUsuarioService.getUsuariosDoGrupo(usuario, idGrupo);
   }
@@ -56,7 +56,7 @@ public class GrupoUsuarioController {
       throws BadRequestException, ForbiddenException {
 
     UsuarioModel usuario =
-        tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
     return grupoUsuarioService.createNewGrupoUsuario(grupoUsuario, usuario);
   }
@@ -67,7 +67,7 @@ public class GrupoUsuarioController {
       throws BadRequestException, ForbiddenException {
 
     UsuarioModel usuario =
-        tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
     return grupoUsuarioService.deleteGrupoUsuario(idGrupoUsuario, usuario);
   }

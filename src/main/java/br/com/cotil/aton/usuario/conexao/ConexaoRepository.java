@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ConexaoRepository extends JpaRepository<ConexaoModel, Integer> {
 
-  boolean existsByNomeConexao(String nomeConexao);
+  boolean existsByNomeUsuario(String nomeConexao);
 
-  Optional<ConexaoModel> findByNomeConexaoAndPass(String nomeConexao, String pass);
+  Optional<ConexaoModel> findByNomeUsuarioAndPassword(String nomeConexao, String pass);
 
 
 

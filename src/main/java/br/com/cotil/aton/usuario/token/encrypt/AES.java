@@ -1,4 +1,4 @@
-package br.com.cotil.aton.usuario.token;
+package br.com.cotil.aton.usuario.token.encrypt;
 
 import java.security.MessageDigest;
 import java.util.Arrays;

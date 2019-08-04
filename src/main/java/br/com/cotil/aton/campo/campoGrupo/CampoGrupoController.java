@@ -50,7 +50,7 @@ public class CampoGrupoController {
       @RequestParam(value = "size", required = false) Integer size) throws BadRequestException {
 
     UsuarioModel usuario =
-        tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
     return campoGrupoService.getCamposDosGruposDoUsuario(usuario, idGrupo, nomeGrupo,
         descricaoGrupo, idCampo, nomeCampo, descricaoCampo, ativo, page, size);
@@ -63,7 +63,7 @@ public class CampoGrupoController {
       throws BadRequestException, ForbiddenException {
 
     UsuarioModel usuario =
-        tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
     return campoGrupoService.autorizarCampoParaUmGrupo(usuario, campoGrupo);
   }
@@ -74,7 +74,7 @@ public class CampoGrupoController {
       throws BadRequestException, ForbiddenException {
 
     UsuarioModel usuario =
-        tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
     return campoGrupoService.desativarCampoParaUmGrupo(usuario, idCampoGrupo);
   }

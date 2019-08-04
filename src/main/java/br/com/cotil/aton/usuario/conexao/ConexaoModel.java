@@ -29,11 +29,11 @@ public class ConexaoModel {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-  @Column(name = "NOME_CONEXAO")
-  String nomeConexao;
+  @Column(name = "NOME_USUARIO")
+  String nomeUsuario;
 
-  @Column(name = "PASS")
-  String pass;
+  @Column(name = "PASSWORD")
+  String password;
 
   @OneToOne
   @JoinColumn(name = "ID_USUARIO")
@@ -55,20 +55,20 @@ public class ConexaoModel {
     this.id = id;
   }
 
-  public String getNomeConexao() {
-    return nomeConexao;
+  public String getNomeUsuario() {
+    return nomeUsuario;
   }
 
-  public void setNomeConexao(String nomeConexao) {
-    this.nomeConexao = nomeConexao;
+  public void setNomeUsuario(String nomeUsuario) {
+    this.nomeUsuario = nomeUsuario;
   }
 
-  public String getPass() {
-    return pass;
+  public String getPassword() {
+    return password;
   }
 
-  public void setPass(String pass) {
-    this.pass = pass;
+  public void setPassword(String password) {
+    this.password = password;
   }
 
   public UsuarioModel getUsaurio() {
@@ -97,7 +97,7 @@ public class ConexaoModel {
 
   @Override
   public String toString() {
-    return "ConexaoModel [id=" + id + ", nomeConexao=" + nomeConexao + ", pass=" + pass
+    return "ConexaoModel [id=" + id + ", nomeConexao=" + nomeUsuario + ", pass=" + password
         + ", usaurio=" + usaurio + ", dataCriacao=" + dataCriacao + ", dataUltimaAtualizacao="
         + dataUltimaAtualizacao + "]";
   }

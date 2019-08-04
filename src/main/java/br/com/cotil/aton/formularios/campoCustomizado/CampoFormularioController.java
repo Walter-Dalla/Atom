@@ -45,7 +45,7 @@ public class CampoFormularioController {
       throws BadRequestException, ForbiddenException {
 
     UsuarioModel usuario =
-        tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
     return campoFormularioService.listaCamposFormularios(usuario, idFormulario);
   }
@@ -56,7 +56,7 @@ public class CampoFormularioController {
       throws BadRequestException, ForbiddenException {
 
     UsuarioModel usuario =
-        tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
     return campoFormularioService.criaFormulario(usuario, campoFormularioModel);
   }
@@ -68,7 +68,7 @@ public class CampoFormularioController {
       throws BadRequestException, ForbiddenException {
 
     UsuarioModel usuario =
-        tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
     return campoFormularioService.desabilitaFormulario(idCampoFormulario, usuario);
   }

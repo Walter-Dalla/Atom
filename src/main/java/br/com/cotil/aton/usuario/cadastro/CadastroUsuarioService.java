@@ -9,6 +9,7 @@ import br.com.cotil.aton.usuario.conexao.ConexaoModel;
 import br.com.cotil.aton.usuario.conexao.ConexaoRepository;
 import br.com.cotil.aton.usuario.usuario.UsuarioModel;
 import br.com.cotil.aton.usuario.usuario.UsuarioRepository;
+import br.com.cotil.aton.util.Utils;
 
 @Service
 public class CadastroUsuarioService {
@@ -34,24 +35,21 @@ public class CadastroUsuarioService {
     validacaoAoCriarUsuario(conexao);
 
     conexao.setUsaurio(usuarioRepository.save(usuarioModel));
-    
+
     conexaoRepository.save(conexao);
-    
+
     return usuarioModel;
   }
 
-  private void validacaoAoCriarUsuario(ConexaoModel conexao) throws ConflictException, BadRequestException {
+  private void validacaoAoCriarUsuario(ConexaoModel conexao)
+      throws ConflictException, BadRequestException {
 
-    boolean existe = conexaoRepository.existsByNomeConexao(conexao.getNomeConexao());
-
-    if (existe)
+    if (conexaoRepository.existsByNomeUsuario(conexao.getNomeUsuario()))
       throw new ConflictException("Nome de usuario já existente");
-    
-    if(conexao.getNomeConexao() == null || conexao.getPass() == null)
+
+    if (Utils.isNullOrEmpty(conexao.getNomeUsuario()) == null
+        || Utils.isNullOrEmpty(conexao.getPassword()))
       throw new BadRequestException("O usuario deve conter um nome e uma senha");
-
   }
-
-
 
 }

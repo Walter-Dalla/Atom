@@ -28,12 +28,6 @@ public class UsuarioModel {
 
   @Column(name = "EMAIL_PRIMARIO")
   private String email;
-
-  @Column(name = "TELEFONE")
-  private String telefone;
-
-  @Column(name = "CARGO")
-  private String cargo;
   
   @Column(name = "ATIVO")
   private boolean ativo;
@@ -70,20 +64,12 @@ public class UsuarioModel {
     this.email = email;
   }
 
-  public String getTelefone() {
-    return telefone;
+  public boolean isAtivo() {
+    return ativo;
   }
 
-  public void setTelefone(String telefone) {
-    this.telefone = telefone;
-  }
-
-  public String getCargo() {
-    return cargo;
-  }
-
-  public void setCargo(String cargo) {
-    this.cargo = cargo;
+  public void setAtivo(boolean ativo) {
+    this.ativo = ativo;
   }
 
   public Date getDataCriacao() {
@@ -102,12 +88,4 @@ public class UsuarioModel {
     this.dataUltimaAtualizacao = dataUltimaAtualizacao;
   }
 
-  public boolean isAtivo() {
-    return ativo;
-  }
-
-  public void setAtivo(boolean ativo) {
-    this.ativo = ativo;
-  }
-  
 }

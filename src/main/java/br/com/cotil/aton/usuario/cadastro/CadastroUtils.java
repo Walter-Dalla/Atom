@@ -15,18 +15,16 @@ public class CadastroUtils {
     usuario.setAtivo(true);
 
     return usuario;
-
   }
 
   public static ConexaoModel createConexaoModel(CadastroUsuarioModel cadastroUsuarioModel) {
 
     ConexaoModel con = new ConexaoModel();
 
-    con.setNomeConexao(cadastroUsuarioModel.getUserName());
-    con.setPass(cadastroUsuarioModel.getPassword());
+    con.setNomeUsuario(cadastroUsuarioModel.getUserName());
+    con.setPassword(cadastroUsuarioModel.getPassword());
 
     return con;
-
   }
 
 }

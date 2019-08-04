@@ -44,7 +44,7 @@ public class CampoCustomisadoController {
       throws BadRequestException {
 
     UsuarioModel usuario =
-        tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
     return campoCustomizadoService.getCampoCustomizado(usuario, id, nome, descricao);
   }
@@ -55,7 +55,7 @@ public class CampoCustomisadoController {
       throws BadRequestException {
 
     UsuarioModel usuario =
-        tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
     return campoCustomizadoService.postCampoCustomisado(usuario, campoCustomizado);
   }
@@ -66,7 +66,7 @@ public class CampoCustomisadoController {
       throws BadRequestException, ForbiddenException {
 
     UsuarioModel usuario =
-        tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
     return campoCustomizadoService.atualizarCampoCustomizado(usuario, campoCustomizado);
   }
@@ -78,7 +78,7 @@ public class CampoCustomisadoController {
       throws BadRequestException, ForbiddenException {
 
     UsuarioModel usuario =
-        tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
     return campoCustomizadoService.desativarCampoCustomizado(usuario, idCampo);
   }

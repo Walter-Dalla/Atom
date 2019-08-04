@@ -7,44 +7,23 @@ import org.springframework.stereotype.Service;
 
 import br.com.cotil.aton.HttpException.BadRequestException;
 import br.com.cotil.aton.HttpException.ConflictException;
-import br.com.cotil.aton.HttpException.ForbiddenException;
-import br.com.cotil.aton.usuario.token.TokenModel;
-import br.com.cotil.aton.usuario.token.TokenService;
-import br.com.cotil.aton.usuario.usuario.UsuarioRepository;
 
 @Service
 public class ConexaoService {
 
-  UsuarioRepository usuarioRepository;
-
   ConexaoRepository conexaoRepository;
 
-  TokenService tokenService;
-
   @Autowired
-  public ConexaoService(UsuarioRepository usuarioRepository, ConexaoRepository conexaoRepository,
-      TokenService tokenService) {
+  public ConexaoService(ConexaoRepository conexaoRepository) {
     super();
-    this.usuarioRepository = usuarioRepository;
     this.conexaoRepository = conexaoRepository;
-    this.tokenService = tokenService;
   }
 
-  public TokenModel autorizar(ConexaoModel conexaoModel, String ip)
-      throws ConflictException, BadRequestException, ForbiddenException {
-
-    ConexaoModel conexao = validarConexao(conexaoModel);
-
-    TokenModel token = tokenService.GerarToken(conexao, ip);
-
-    return token;
-  }
-
-  private ConexaoModel validarConexao(ConexaoModel conexao)
+  public ConexaoModel validarConexao(ConexaoModel conexao)
       throws ConflictException, BadRequestException {
 
-    Optional<ConexaoModel> conexaoOpcional =
-        conexaoRepository.findByNomeConexaoAndPass(conexao.getNomeConexao(), conexao.getPass());
+    Optional<ConexaoModel> conexaoOpcional = conexaoRepository
+        .findByNomeUsuarioAndPassword(conexao.getNomeUsuario(), conexao.getPassword());
 
     if (!conexaoOpcional.isPresent())
       throw new BadRequestException("Usuario não encontrado");
@@ -52,6 +31,14 @@ public class ConexaoService {
     return conexaoOpcional.get();
   }
 
+  public ConexaoModel validarConexao(Integer idConexao)
+      throws BadRequestException {
 
+    Optional<ConexaoModel> conexaoOpcional = conexaoRepository.findById(idConexao);
 
+    if (!conexaoOpcional.isPresent())
+      throw new BadRequestException("Usuario não encontrado");
+
+    return conexaoOpcional.get();
+  }
 }

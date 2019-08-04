@@ -40,7 +40,7 @@ public class GrupoController {
       Integer id) throws BadRequestException {
 
     UsuarioModel usuario =
-        tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
     return grupoService.getGrupos(usuario, id);
   }
@@ -50,7 +50,7 @@ public class GrupoController {
       @RequestBody GrupoModel novoGrupo) throws BadRequestException {
 
     UsuarioModel usuario =
-        tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
     return grupoService.createNewGrupo(usuario, novoGrupo);
   }
@@ -60,7 +60,7 @@ public class GrupoController {
       @RequestBody GrupoModel novoGrupo) throws BadRequestException {
 
     UsuarioModel usuario =
-        tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
     return grupoService.updateGrupos(novoGrupo, usuario);
   }
@@ -71,7 +71,7 @@ public class GrupoController {
       @PathVariable("id") Integer idGrupo) throws BadRequestException {
 
     UsuarioModel usuario =
-        tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
     return grupoService.deleteGrupo(idGrupo, usuario);
   }

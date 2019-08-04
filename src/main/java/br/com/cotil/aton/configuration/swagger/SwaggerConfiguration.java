@@ -16,7 +16,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
-@ComponentScan(basePackages = "br.com.assertiva.usuariosGrupos")
+@ComponentScan(basePackages = "br.com.cotil.aton")
 public class SwaggerConfiguration {
 
   @Bean

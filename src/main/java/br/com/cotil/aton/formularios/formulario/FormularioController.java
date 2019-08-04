@@ -43,7 +43,7 @@ public class FormularioController {
 			@RequestParam(value = "nomeFormulario", required = false) String nomeFormulario,
 			@RequestParam(value = "ativo", required = false, defaultValue = "true") boolean ativo) throws BadRequestException {
 
-		UsuarioModel usuario = tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+		UsuarioModel usuario = tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
 		return formularioService.listaFormularios(usuario, id, nomeFormulario, ativo);
 	}
@@ -52,7 +52,7 @@ public class FormularioController {
 	public FormularioModel criaFormularios(HttpServletRequest request, @RequestHeader("Token") String token,
 			@RequestBody FormularioModel formulario) throws BadRequestException {
 
-		UsuarioModel usuario = tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+		UsuarioModel usuario = tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
 		return formularioService.criaFormulario(usuario, formulario);
 	}
@@ -61,7 +61,7 @@ public class FormularioController {
 	public FormularioModel atualizaFormulario(HttpServletRequest request, @RequestHeader("Token") String token,
 			@RequestBody FormularioModel formulario) throws BadRequestException, ForbiddenException {
 
-		UsuarioModel usuario = tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+		UsuarioModel usuario = tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
 		return formularioService.atualizaFormulario(usuario, formulario);
 	}
@@ -70,7 +70,7 @@ public class FormularioController {
 	public FormularioModel desabilitaFormulario(HttpServletRequest request, @RequestHeader("Token") String token,
 			@PathVariable("idFormulario") Integer idFormulario) throws BadRequestException, ForbiddenException {
 
-		UsuarioModel usuario = tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+		UsuarioModel usuario = tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
 		return formularioService.desabilitaFormulario(idFormulario, usuario);
 	}

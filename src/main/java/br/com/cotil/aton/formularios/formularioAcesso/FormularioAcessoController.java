@@ -31,7 +31,7 @@ public class FormularioAcessoController {
 			@RequestParam(value = "nomeFormulario", required = false) String nomeFormulario)
 			throws BadRequestException {
 
-		UsuarioModel usuario = tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+		UsuarioModel usuario = tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
 		return formularioAcessoService.listraGruposUsuario(usuario, idGrupo, nomeGrupo, nomeFormulario);
 

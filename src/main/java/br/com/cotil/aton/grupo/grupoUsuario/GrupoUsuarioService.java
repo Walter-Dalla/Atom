@@ -119,7 +119,7 @@ public class GrupoUsuarioService extends GrupoUsuarioConstantes {
       throw new ForbiddenException(USUARIO_NAO_DONO);
 
     Optional<UsuarioModel> usuarioParceiroOptional =
-        usuarioService.getUser(usuarioParceiro.getId());
+        usuarioService.getUsuarioById(usuarioParceiro.getId());
 
     if (!grupoOptional.isPresent())
       throw new BadRequestException(USUARIO_NAO_ENCONTRADO);

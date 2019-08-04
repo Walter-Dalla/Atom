@@ -34,7 +34,7 @@ public class CampoPadraoController {
       @RequestParam(value = "nome", required = false) String nome,
       @RequestParam(value = "descricao", required = false) String descricao) throws BadRequestException {
 
-    tokenService.getDadosToken(token, RequestUtils.getIpFromRequest(request));
+    tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
     return campoPadraoService.getCamposPadrao(id, nome, descricao);
   }

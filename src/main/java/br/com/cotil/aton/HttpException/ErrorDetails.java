@@ -2,22 +2,22 @@ package br.com.cotil.aton.HttpException;
 
 public class ErrorDetails {
 
-  private String mensagem;
+  private Object mensagem;
   private String tipo;
   private int codigo;
 
-  public ErrorDetails(String mensagem, String tipo, int codigo) {
+  public ErrorDetails(Object mensagem, String tipo, int codigo) {
     super();
     this.mensagem = mensagem;
     this.tipo = tipo;
     this.codigo = codigo;
   }
 
-  public String getMensagem() {
+  public Object getMensagem() {
     return mensagem;
   }
 
-  public void setMensagem(String mensagem) {
+  public void setMensagem(Object mensagem) {
     this.mensagem = mensagem;
   }
 

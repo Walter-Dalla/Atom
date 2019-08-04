@@ -3,16 +3,16 @@ package br.com.cotil.aton.HttpException;
 public class BaseException extends Exception {
 
   private static final long serialVersionUID = 1L;
-  
+
   protected final String tipo;
-  protected final String mensagem;
+  protected final Object mensagem;
   protected final Integer codigo;
 
-  public BaseException(String tipo, String mensagem, Integer codigo) {
+  public BaseException(String tipo, Object mensagem, Integer codigo) {
     super();
     this.tipo = tipo;
-    this.mensagem = mensagem;
     this.codigo = codigo;
+    this.mensagem = mensagem;
   }
 
   public static long getSerialversionuid() {
@@ -23,7 +23,7 @@ public class BaseException extends Exception {
     return tipo;
   }
 
-  public String getMensagem() {
+  public Object getMensagem() {
     return mensagem;
   }
 
