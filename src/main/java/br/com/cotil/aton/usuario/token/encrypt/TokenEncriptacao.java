@@ -19,7 +19,7 @@ public class TokenEncriptacao {
     String token;
 
     token = conexaoModel.getId() + ";" + conexaoModel.getNomeUsuario() + ";"
-        + conexaoModel.getUsaurio().getNome() + ";" + "Aton;" + ZonedDateTime
+        + conexaoModel.getUsuario().getNome() + ";" + "Aton;" + ZonedDateTime
             .now(ZoneId.of("America/Sao_Paulo")).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
         + ";" + requestIp;
 
@@ -28,7 +28,7 @@ public class TokenEncriptacao {
     TokenModel tokenAcesso = new TokenModel();
 
     tokenAcesso.setConexao(conexaoModel);
-    tokenAcesso.setUsuario(conexaoModel.getUsaurio());
+    tokenAcesso.setUsuario(conexaoModel.getUsuario());
 
     AES.setKey(key);
 

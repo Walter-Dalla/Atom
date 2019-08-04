@@ -11,7 +11,7 @@ public class CadastroUtils {
     UsuarioModel usuario = new UsuarioModel();
 
     usuario.setEmail(cadastroUsuarioModel.getEmail());
-    usuario.setNome(cadastroUsuarioModel.getNomeCompleto());
+    usuario.setNome(cadastroUsuarioModel.getNomeExibicao());
     usuario.setAtivo(true);
 
     return usuario;

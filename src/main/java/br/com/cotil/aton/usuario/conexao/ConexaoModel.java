@@ -37,7 +37,7 @@ public class ConexaoModel {
 
   @OneToOne
   @JoinColumn(name = "ID_USUARIO")
-  private UsuarioModel usaurio;
+  private UsuarioModel usuario;
 
   @CreatedDate
   @Column(name = "DATA_CRIACAO")
@@ -71,12 +71,12 @@ public class ConexaoModel {
     this.password = password;
   }
 
-  public UsuarioModel getUsaurio() {
-    return usaurio;
+  public UsuarioModel getUsuario() {
+    return usuario;
   }
 
-  public void setUsaurio(UsuarioModel usaurio) {
-    this.usaurio = usaurio;
+  public void setUsuario(UsuarioModel usuario) {
+    this.usuario = usuario;
   }
 
   public Date getDataCriacao() {
@@ -98,7 +98,7 @@ public class ConexaoModel {
   @Override
   public String toString() {
     return "ConexaoModel [id=" + id + ", nomeConexao=" + nomeUsuario + ", pass=" + password
-        + ", usaurio=" + usaurio + ", dataCriacao=" + dataCriacao + ", dataUltimaAtualizacao="
+        + ", usaurio=" + usuario + ", dataCriacao=" + dataCriacao + ", dataUltimaAtualizacao="
         + dataUltimaAtualizacao + "]";
   }
   

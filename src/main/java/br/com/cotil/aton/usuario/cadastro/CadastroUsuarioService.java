@@ -34,7 +34,7 @@ public class CadastroUsuarioService {
 
     validacaoAoCriarUsuario(conexao);
 
-    conexao.setUsaurio(usuarioRepository.save(usuarioModel));
+    conexao.setUsuario(usuarioRepository.save(usuarioModel));
 
     conexaoRepository.save(conexao);
 

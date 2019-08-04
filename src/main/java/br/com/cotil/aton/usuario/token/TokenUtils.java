@@ -14,10 +14,10 @@ public class TokenUtils {
 
 
   public static void validaUsuario(ConexaoModel conexaoModel) throws ForbiddenException {
-    if (!conexaoModel.getUsaurio().isAtivo()) {
+    if (!conexaoModel.getUsuario().isAtivo()) {
       DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
       throw new ForbiddenException("Este usuario está inativo des do dia: "
-          + dateFormat.format(conexaoModel.getUsaurio().getDataUltimaAtualizacao()));
+          + dateFormat.format(conexaoModel.getUsuario().getDataUltimaAtualizacao()));
     }
   }
 

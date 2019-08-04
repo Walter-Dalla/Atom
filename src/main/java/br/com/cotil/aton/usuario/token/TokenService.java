@@ -46,7 +46,7 @@ public class TokenService {
 
     TokenUtils.validaToken(conexao, dadosList, ip);
 
-    return conexao.getUsaurio();
+    return conexao.getUsuario();
   }
 
   public TokenModel getToken(ConexaoModel conexaoModel, String ip)
