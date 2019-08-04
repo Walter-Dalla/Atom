@@ -1,13 +1,12 @@
 package br.com.cotil.aton.grupo.grupo;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import br.com.cotil.aton.HttpException.BadRequestException;
-import br.com.cotil.aton.grupo.GrupoConstantes;
 import br.com.cotil.aton.grupo.grupoUsuario.GrupoUsuarioModel;
 import br.com.cotil.aton.grupo.grupoUsuario.GrupoUsuarioService;
 import br.com.cotil.aton.usuario.usuario.UsuarioModel;
@@ -29,24 +28,17 @@ public class GrupoService {
   }
 
 
-  public List<GrupoUsuarioModel> getGrupos(UsuarioModel usuario, Integer id)
+  public Page<GrupoModel> getGrupos(UsuarioModel usuario, Integer idGrupo, Integer page, Integer size)
       throws BadRequestException {
+    
+    Page<GrupoModel> grupoList;
 
-    if (id == null) {
-      List<GrupoUsuarioModel> grupoList = grupoUsuarioService.getAllGruposDoUsuario(usuario);
+    if (idGrupo == null)
+      grupoList = grupoUsuarioService.getAllGruposDoUsuario(usuario, page, size);
+    else
+      grupoList = grupoUsuarioService.getGrupousuarioByIdGrupoAndIdUsuario(idGrupo, usuario);
 
-      if (grupoList.isEmpty())
-        throw new BadRequestException(GrupoConstantes.GRUPO_NÃO_EXISTE);
-
-      return grupoList;
-    } else {
-      Optional<GrupoModel> grupoOptional = grupoRepository.findById(id);
-
-      if (!grupoOptional.isPresent())
-        throw new BadRequestException(GrupoConstantes.GRUPO_NÃO_EXISTE);
-
-      return grupoUsuarioService.getUsuariosDoGrupo(grupoOptional.get());
-    }
+    return grupoList;
   }
 
 
@@ -57,7 +49,7 @@ public class GrupoService {
     novoGrupo = validarGrupo(novoGrupo);
 
     novoGrupo.setAtivo(true);
-    
+
     novoGrupo.setUsuario(usuario);
 
     GrupoModel grupoSalvo = grupoRepository.save(novoGrupo);

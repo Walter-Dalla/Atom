@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.cotil.aton.HttpException.BadRequestException;
@@ -37,12 +38,14 @@ public class GrupoController {
 
   @GetMapping
   public Object getGrupo(HttpServletRequest request, @RequestHeader("Token") String token,
-      Integer id) throws BadRequestException {
+      @RequestParam(name = "idGrupo", required = false) Integer idGrupo,
+      @RequestParam(name = "page", defaultValue = "0") Integer page,
+      @RequestParam(name = "size", defaultValue = "20") Integer size) throws BadRequestException {
 
     UsuarioModel usuario =
         tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
-    return grupoService.getGrupos(usuario, id);
+    return grupoService.getGrupos(usuario, idGrupo, page, size);
   }
 
   @PostMapping
@@ -65,9 +68,9 @@ public class GrupoController {
     return grupoService.updateGrupos(novoGrupo, usuario);
   }
 
-  
+
   @DeleteMapping("/{id}")
-  public GrupoModel updateGrupo(HttpServletRequest request, @RequestHeader("Token") String token,
+  public GrupoModel deleteGrupo(HttpServletRequest request, @RequestHeader("Token") String token,
       @PathVariable("id") Integer idGrupo) throws BadRequestException {
 
     UsuarioModel usuario =
@@ -75,5 +78,5 @@ public class GrupoController {
 
     return grupoService.deleteGrupo(idGrupo, usuario);
   }
-  
+
 }

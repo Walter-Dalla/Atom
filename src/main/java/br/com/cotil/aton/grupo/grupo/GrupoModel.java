@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -43,6 +44,9 @@ public class GrupoModel {
   @JsonIgnore
   @JoinColumn(name = "ID_USUARIO")
   UsuarioModel usuario;
+
+  @Transient
+  String nomeUsuarioDono;
 
   @CreatedDate
   @Column(name = "DATA_CRIACAO", updatable = false)
@@ -108,6 +112,7 @@ public class GrupoModel {
     this.usuario = usuario;
   }
 
-
-
+  public String getNomeUsuarioDono() {
+    return usuario.getNome();
+  }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import br.com.cotil.aton.HttpException.BadRequestException;
@@ -13,6 +14,7 @@ import br.com.cotil.aton.grupo.grupo.GrupoModel;
 import br.com.cotil.aton.grupo.grupo.GrupoRepository;
 import br.com.cotil.aton.usuario.usuario.UsuarioModel;
 import br.com.cotil.aton.usuario.usuario.UsuarioService;
+import br.com.cotil.aton.util.Utils;
 
 @Service
 public class GrupoUsuarioService extends GrupoUsuarioConstantes {
@@ -29,24 +31,25 @@ public class GrupoUsuarioService extends GrupoUsuarioConstantes {
     this.usuarioService = usuarioService;
     this.grupoRepository = grupoRepository;
   }
-  
-  public List<GrupoUsuarioModel> getAllGruposDoUsuario(UsuarioModel usuario)
+
+  public Page<GrupoModel> getAllGruposDoUsuario(UsuarioModel usuario, Integer page, Integer size)
       throws BadRequestException {
 
-
-    List<GrupoUsuarioModel> grupoUsuarioList = grupoUsuarioRepository.findAllByUsuario(usuario.getId());
+    Page<GrupoModel> grupoUsuarioList = grupoUsuarioRepository
+        .findAllGruposByUsuario(usuario.getId(), Utils.setPageRequestConfig(page, size));
 
     return grupoUsuarioList;
   }
 
-  public List<Integer> getAllIdGruposDoUsuario(UsuarioModel usuario) throws BadRequestException, ForbiddenException {
-    
-    List<Integer>  listaIdsGrupos= grupoUsuarioRepository.findAllIdGrupoByUsuario(usuario.getId());
-    
+  public List<Integer> getAllIdGruposDoUsuario(UsuarioModel usuario)
+      throws BadRequestException, ForbiddenException {
+
+    List<Integer> listaIdsGrupos = grupoUsuarioRepository.findAllIdGrupoByUsuario(usuario.getId());
+
     if (listaIdsGrupos.isEmpty())
       throw new ForbiddenException("Você não possui acesso a esse formulario");
-    
-    
+
+
     return listaIdsGrupos;
   }
 
@@ -72,6 +75,13 @@ public class GrupoUsuarioService extends GrupoUsuarioConstantes {
   public Optional<GrupoUsuarioModel> getGrupousuarioByIdGrupoAndIdUsuario(Integer idGrupo,
       Integer idUsuario) {
     return grupoUsuarioRepository.getGrupousuarioByIdGrupoAndIdUsuario(idGrupo, idUsuario);
+  }
+
+  public Page<GrupoModel> getGrupousuarioByIdGrupoAndIdUsuario(Integer idGrupo,
+      UsuarioModel usuario) {
+
+    return grupoUsuarioRepository.getGruposByIdGrupoAndIdUsuario(idGrupo, usuario.getId(),
+        Utils.setPageRequestConfig(0, 1));
   }
 
 
