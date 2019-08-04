@@ -29,32 +29,32 @@ public class GrupoModel {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  Integer id;
+  private Integer id;
 
   @Column(name = "NOME")
-  String nome;
+  private String nome;
 
   @Column(name = "DESCRICAO")
-  String descricao;
+  private String descricao;
 
   @Column(name = "ATIVO")
-  boolean ativo;
+  private boolean ativo;
 
   @OneToOne
   @JsonIgnore
   @JoinColumn(name = "ID_USUARIO")
-  UsuarioModel usuario;
+  private UsuarioModel usuario;
 
   @Transient
-  String nomeUsuarioDono;
+  private String nomeUsuarioDono;
 
   @CreatedDate
   @Column(name = "DATA_CRIACAO", updatable = false)
-  Date dataCriacao;
+  private Date dataCriacao;
 
   @LastModifiedDate
   @Column(name = "DATA_ATUALIZACAO", updatable = false)
-  Date dataUltimaAtualizacao;
+  private Date dataUltimaAtualizacao;
 
   public Integer getId() {
     return id;
@@ -113,6 +113,16 @@ public class GrupoModel {
   }
 
   public String getNomeUsuarioDono() {
-    return usuario.getNome();
+    if (usuario != null)
+      return usuario.getNome();
+    return nomeUsuarioDono;
   }
+
+  public void setNomeUsuarioDono(String nomeUsuarioDono) {
+    this.nomeUsuarioDono = "";
+    if (usuario != null)
+      this.nomeUsuarioDono = usuario.getNome();
+  }
+
+
 }

@@ -23,9 +23,14 @@ public class UsuarioService {
     this.usuarioRepository = usuarioRepository;
   }
 
-  public Optional<UsuarioModel> getUsuarioById(Integer idUsuario) throws BadRequestException {
+  public UsuarioModel getUsuarioById(Integer idUsuario) throws BadRequestException {
 
-    return usuarioRepository.findById(idUsuario);
+    Optional<UsuarioModel> usuarioOptional = usuarioRepository.findById(idUsuario);
+
+    if (!usuarioOptional.isPresent())
+      throw new BadRequestException("Usuario não encontrado");
+
+    return usuarioOptional.get();
   }
 
   public UsuarioModel alterUser(String token, UsuarioModel usuarioAlterado, UsuarioModel usuario)

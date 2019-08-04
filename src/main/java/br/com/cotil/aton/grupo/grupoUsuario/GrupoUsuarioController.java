@@ -1,10 +1,9 @@
 package br.com.cotil.aton.grupo.grupoUsuario;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,32 +36,30 @@ public class GrupoUsuarioController {
     this.grupoUsuarioService = grupoUsuarioService;
   }
 
-
-
   @GetMapping
-  public List<UsuarioModel> getGrupoUsuario(HttpServletRequest request,
+  public Page<UsuarioModel> getUsuariosDoGrupo(HttpServletRequest request,
       @RequestHeader("Token") String token, @RequestParam("idGrupo") Integer idGrupo)
       throws BadRequestException, ForbiddenException {
 
     UsuarioModel usuario =
         tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
-    return grupoUsuarioService.getUsuariosDoGrupo(usuario, idGrupo);
+    return grupoUsuarioService.getUsuariosDoGrupo(usuario, idGrupo, 0, 20);
   }
 
   @PostMapping
-  public GrupoUsuarioModel createNewGrupoUsuario(HttpServletRequest request,
+  public GrupoUsuarioModel adicionaUsuarioNoGrupo(HttpServletRequest request,
       @RequestHeader("Token") String token, @RequestBody GrupoUsuarioModel grupoUsuario)
       throws BadRequestException, ForbiddenException {
 
     UsuarioModel usuario =
         tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
-    return grupoUsuarioService.createNewGrupoUsuario(grupoUsuario, usuario);
+    return grupoUsuarioService.adicionaUsuarioNoGrupo(grupoUsuario, usuario);
   }
 
   @DeleteMapping("/{id}")
-  public GrupoUsuarioModel updateGrupo(HttpServletRequest request,
+  public GrupoUsuarioModel deleteGrupoUsuario(HttpServletRequest request,
       @RequestHeader("Token") String token, @PathVariable("id") Integer idGrupoUsuario)
       throws BadRequestException, ForbiddenException {
 

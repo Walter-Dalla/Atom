@@ -1,23 +1,19 @@
 package br.com.cotil.aton.grupo.grupo;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import br.com.cotil.aton.HttpException.BadRequestException;
-import br.com.cotil.aton.grupo.grupoUsuario.GrupoUsuarioModel;
 import br.com.cotil.aton.grupo.grupoUsuario.GrupoUsuarioService;
 import br.com.cotil.aton.usuario.usuario.UsuarioModel;
-import br.com.cotil.aton.util.Utils;
 
 @Service
 public class GrupoService {
 
-  GrupoRepository grupoRepository;
+  private GrupoRepository grupoRepository;
 
-  GrupoUsuarioService grupoUsuarioService;
+  private GrupoUsuarioService grupoUsuarioService;
 
 
   @Autowired
@@ -28,9 +24,9 @@ public class GrupoService {
   }
 
 
-  public Page<GrupoModel> getGrupos(UsuarioModel usuario, Integer idGrupo, Integer page, Integer size)
-      throws BadRequestException {
-    
+  public Page<GrupoModel> getGrupos(UsuarioModel usuario, Integer idGrupo, Integer page,
+      Integer size) throws BadRequestException {
+
     Page<GrupoModel> grupoList;
 
     if (idGrupo == null)
@@ -46,11 +42,9 @@ public class GrupoService {
   public GrupoModel createNewGrupo(UsuarioModel usuario, GrupoModel novoGrupo)
       throws BadRequestException {
 
-    novoGrupo = validarGrupo(novoGrupo);
+    novoGrupo = GrupoUtils.validarGrupo(novoGrupo);
 
-    novoGrupo.setAtivo(true);
-
-    novoGrupo.setUsuario(usuario);
+    novoGrupo = GrupoUtils.prepararGrupo(novoGrupo, usuario);
 
     GrupoModel grupoSalvo = grupoRepository.save(novoGrupo);
 
@@ -60,42 +54,33 @@ public class GrupoService {
   }
 
 
-
   public GrupoModel updateGrupos(GrupoModel grupo, UsuarioModel usuario)
       throws BadRequestException {
 
-    Optional<GrupoUsuarioModel> grupoNoBancoOptional =
-        grupoUsuarioService.getGrupousuarioByIdGrupoAndIdUsuario(grupo.getId(), usuario.getId());
+    GrupoUtils.validarGrupo(grupo);
 
-    if (!grupoNoBancoOptional.isPresent())
-      throw new BadRequestException("Grupo inexistente");
+    GrupoModel grupoNoBanco = getGrupo(grupo.getId(), usuario.getId(), true);
 
-    GrupoModel grupoNoBanco = grupoNoBancoOptional.get().getGrupo();
+    grupo = GrupoUtils.matchGrupos(grupoNoBanco, grupo);
 
-    validarGrupo(grupo);
+    return grupoRepository.save(grupo);
+  }
 
-    grupoNoBanco.setNome(grupo.getNome());
+
+  public GrupoModel deleteGrupo(Integer idGrupo, UsuarioModel usuario) throws BadRequestException {
+
+    GrupoModel grupoNoBanco = getGrupo(idGrupo, usuario.getId(), true);
+
+    grupoNoBanco.setAtivo(false);
 
     return grupoRepository.save(grupoNoBanco);
   }
 
-  public GrupoModel deleteGrupo(Integer idGrupo, UsuarioModel usuario) throws BadRequestException {
-    Optional<GrupoUsuarioModel> grupoNoBancoOptional =
-        grupoUsuarioService.getGrupousuarioByIdGrupoAndIdUsuario(idGrupo, usuario.getId());
 
-    if (!grupoNoBancoOptional.isPresent())
-      throw new BadRequestException("Grupo inexistente");
+  public GrupoModel getGrupo(Integer idGrupo, Integer idUsuario, boolean ativo)
+      throws BadRequestException {
 
-    GrupoModel grupo = grupoNoBancoOptional.get().getGrupo();
-    grupo.setAtivo(false);
-    return grupoRepository.save(grupo);
-  }
+    return grupoUsuarioService.getGrupo(idGrupo, idUsuario, ativo);
 
-  private GrupoModel validarGrupo(GrupoModel grupo) throws BadRequestException {
-
-    if (Utils.isNullOrEmpty(grupo.getNome()))
-      throw new BadRequestException("O Grupo necessista ter um nome");
-
-    return grupo;
   }
 }
