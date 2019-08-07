@@ -1,11 +1,15 @@
 package br.com.cotil.aton.formularios.formulario;
 
-import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import br.com.cotil.aton.usuario.usuario.UsuarioModel;
 
 @Repository
 public interface FormularioRepository extends JpaRepository<FormularioModel, Integer> {
@@ -14,8 +18,10 @@ public interface FormularioRepository extends JpaRepository<FormularioModel, Int
 			+ " and (fm.usuario.id = :idUsuario)"
 			+ " and (fm.id = :id or :id is null)"
 			+ " and (fm.ativo = :ativo or :ativo is null)")
-	List<FormularioModel> findByIdAndNomeFormularioAndIdUsuarioAndAtivo(@Param("id") Integer id,
+  Page<FormularioModel> findByIdAndNomeFormularioAndIdUsuarioAndAtivo(@Param("id") Integer id,
 			@Param("nomeFormulario") String nomeFormulario, @Param("idUsuario") Integer idUsuario,
-			@Param("ativo") boolean ativo);
+			@Param("ativo") boolean ativo, Pageable pageable);
+
+  Optional<FormularioModel> findByIdAndUsuario(Integer idFormulario, UsuarioModel usuario);
 
 }

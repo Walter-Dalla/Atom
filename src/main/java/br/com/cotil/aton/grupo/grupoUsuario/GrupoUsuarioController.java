@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -58,15 +57,15 @@ public class GrupoUsuarioController {
     return grupoUsuarioService.adicionaUsuarioNoGrupo(grupoUsuario, usuario);
   }
 
-  @DeleteMapping("/{id}")
+  @DeleteMapping()
   public GrupoUsuarioModel deleteGrupoUsuario(HttpServletRequest request,
-      @RequestHeader("Token") String token, @PathVariable("id") Integer idGrupoUsuario)
-      throws BadRequestException, ForbiddenException {
+      @RequestHeader("Token") String token, @RequestParam("idUsuario") Integer idUsuario,
+      @RequestParam("idGrupo") Integer idGrupo) throws BadRequestException, ForbiddenException {
 
     UsuarioModel usuario =
         tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
-    return grupoUsuarioService.deleteGrupoUsuario(idGrupoUsuario, usuario);
+    return grupoUsuarioService.deleteGrupoUsuario(idUsuario, idGrupo, usuario);
   }
 
 }

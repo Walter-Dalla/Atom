@@ -1,9 +1,9 @@
 package br.com.cotil.aton.campo.padrao;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.cotil.aton.HttpException.BadRequestException;
@@ -18,24 +18,28 @@ public class CampoPadraoService {
     this.campoPadraoRepository = campoPadraoRepository;
   }
 
-  public List<CampoPadraoModel> getCamposPadrao(Integer id, String nome, String descricao)
-      throws BadRequestException {
-    if (id == null && Utils.isNullOrEmpty(nome) && Utils.isNullOrEmpty(descricao))
-      return campoPadraoRepository.findAll();
+  public Page<CampoPadraoModel> getCamposPadrao(Integer id, String nome, String descricao,
+      Integer page, Integer size) throws BadRequestException {
 
-    Optional<CampoPadraoModel> campoPadraoModelOptional =
-        campoPadraoRepository.findByIdAndNomeAndDescricao(id, nome, descricao);
-    
-    if (!campoPadraoModelOptional.isPresent())
+    Pageable pageable = Utils.setPageRequestConfig(page, size);
+
+    Page<CampoPadraoModel> campoPadrao =
+        campoPadraoRepository.findByIdAndNomeAndDescricao(id, nome, descricao, pageable);
+
+    if (campoPadrao.isEmpty())
       throw new BadRequestException("Campo não encontrado");
 
-    List<CampoPadraoModel> listaDeCampoPadrao = new ArrayList<CampoPadraoModel>();
-
-    listaDeCampoPadrao.add(campoPadraoModelOptional.get());
-
-    return listaDeCampoPadrao;
+    return campoPadrao;
   }
 
+  public CampoPadraoModel validaCampoPadrao(Integer id) throws BadRequestException {
+    Optional<CampoPadraoModel> campoPadrao = campoPadraoRepository.findById(id);
 
+    if (!campoPadrao.isPresent())
+      throw new BadRequestException("Campo não encontrado");
+
+
+    return campoPadrao.get();
+  }
 
 }

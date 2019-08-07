@@ -1,9 +1,9 @@
 package br.com.cotil.aton.formularios.formulario;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import br.com.cotil.aton.HttpException.BadRequestException;
@@ -22,20 +22,20 @@ public class FormularioService {
     this.formularioRepository = formularioRepository;
   }
 
-  public List<FormularioModel> listaFormularios(UsuarioModel usuario, Integer id,
-      String nomeFormulario, boolean ativo) {
+  public Page<FormularioModel> listaFormularios(UsuarioModel usuario, Integer id,
+      String nomeFormulario, boolean ativo, Integer page, Integer size) {
 
-    List<FormularioModel> lista = formularioRepository
-        .findByIdAndNomeFormularioAndIdUsuarioAndAtivo(id, nomeFormulario, usuario.getId(), ativo);
+    Page<FormularioModel> lista =
+        formularioRepository.findByIdAndNomeFormularioAndIdUsuarioAndAtivo(id, nomeFormulario,
+            usuario.getId(), ativo, Utils.setPageRequestConfig(page, size));
 
     return lista;
   }
 
   public FormularioModel criaFormulario(UsuarioModel usuario, FormularioModel formulario)
-      throws BadRequestException {
+      throws BadRequestException, ForbiddenException {
 
-    if (Utils.isNullOrEmpty(formulario.getNomeFormulario()))
-      throw new BadRequestException("Formulário precisa de nome!");
+    validaFormulario(formulario, usuario);
 
     formulario.setUsuario(usuario);
     formulario.setAtivo(true);
@@ -43,41 +43,35 @@ public class FormularioService {
     return formularioRepository.save(formulario);
   }
 
+
   public FormularioModel atualizaFormulario(UsuarioModel usuario, FormularioModel formulario)
       throws BadRequestException, ForbiddenException {
 
-    Optional<FormularioModel> formularioOptional =
-        formularioRepository.findById(formulario.getId());
+    FormularioModel formularioBanco = pegaFormularioDoBanco(formulario.getId(), usuario);
 
-    if (!formularioOptional.isPresent())
-      throw new BadRequestException("Formulário Inexistente!");
+    validaFormulario(formularioBanco, usuario);
 
-    FormularioModel formularioExistenteBD = formularioOptional.get();
+    formularioBanco.setNomeFormulario(formulario.getNomeFormulario());
+    formularioBanco.setCompartilhavel(formulario.isCompartilhavel());
 
-    if (formularioExistenteBD.getUsuario().getId() != usuario.getId())
-      throw new ForbiddenException("Usuário Inválido!");
-
-    formularioExistenteBD.setNomeFormulario(formulario.getNomeFormulario());
-    formularioExistenteBD.setCompartilhavel(formulario.isCompartilhavel());
-
-    return formularioRepository.save(formularioExistenteBD);
+    return formularioRepository.save(formularioBanco);
   }
 
   public FormularioModel desabilitaFormulario(Integer idFormulario, UsuarioModel usuario)
       throws BadRequestException, ForbiddenException {
 
-    FormularioModel formularioExistenteBD = pegaFormularioDoBanco(idFormulario);
-
-    if (formularioExistenteBD.getUsuario().getId() != usuario.getId())
-      throw new ForbiddenException("Usuário Inválido!");
+    FormularioModel formularioExistenteBD = pegaFormularioDoBanco(idFormulario, usuario);
 
     formularioExistenteBD.setAtivo(false);
 
     return formularioRepository.save(formularioExistenteBD);
   }
 
-  public FormularioModel pegaFormularioDoBanco(Integer idFormulario) throws BadRequestException {
-    Optional<FormularioModel> formularioOptional = formularioRepository.findById(idFormulario);
+  public FormularioModel pegaFormularioDoBanco(Integer idFormulario, UsuarioModel usuario)
+      throws BadRequestException {
+
+    Optional<FormularioModel> formularioOptional =
+        formularioRepository.findByIdAndUsuario(idFormulario, usuario);
 
     if (!formularioOptional.isPresent())
       throw new BadRequestException("Formulario inexistente");
@@ -85,5 +79,10 @@ public class FormularioService {
     return formularioOptional.get();
   }
 
+  private void validaFormulario(FormularioModel formulario, UsuarioModel usuario)
+      throws BadRequestException, ForbiddenException {
+    if (Utils.isNullOrEmpty(formulario.getNomeFormulario()))
+      throw new BadRequestException("Formulário precisa de nome!");
+  }
 
 }

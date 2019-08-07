@@ -1,15 +1,15 @@
 package br.com.cotil.aton.campo.customisado;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.cotil.aton.HttpException.BadRequestException;
 import br.com.cotil.aton.HttpException.ForbiddenException;
 import br.com.cotil.aton.campo.padrao.CampoPadraoModel;
-import br.com.cotil.aton.campo.padrao.CampoPadraoRepository;
+import br.com.cotil.aton.campo.padrao.CampoPadraoService;
 import br.com.cotil.aton.usuario.usuario.UsuarioModel;
 import br.com.cotil.aton.util.Utils;
 
@@ -17,32 +17,23 @@ import br.com.cotil.aton.util.Utils;
 public class CampoCustomizadoService {
 
   private CampoCustomizadoRepository campoCustomizadoRepository;
-  private CampoPadraoRepository campoPadraoRepository;
+  private CampoPadraoService campoPadraoService;
 
   public CampoCustomizadoService(CampoCustomizadoRepository campoCustomizadoRepository,
-      CampoPadraoRepository campoPadraoRepository) {
+      CampoPadraoService campoPadraoService) {
     super();
     this.campoCustomizadoRepository = campoCustomizadoRepository;
-    this.campoPadraoRepository = campoPadraoRepository;
+    this.campoPadraoService = campoPadraoService;
   }
 
-  public List<CampoCustomizadoModel> getCampoCustomizado(UsuarioModel usuario, Integer id,
-      String nome, String descricao) throws BadRequestException {
+  public Page<CampoCustomizadoModel> getCampoCustomizado(UsuarioModel usuario, Integer id,
+      String nome, String descricao, boolean ativo, Integer page, Integer size)
+      throws BadRequestException {
 
-    if (id == null && Utils.isNullOrEmpty(nome) && Utils.isNullOrEmpty(descricao))
-      return campoCustomizadoRepository.findAllByUsuario(usuario);
+    Pageable pageable = Utils.setPageRequestConfig(page, size);
 
-    Optional<CampoCustomizadoModel> campoCustomizadoOptional =
-        campoCustomizadoRepository.findByIdAndNomeAndDescricao(id, nome, descricao);
-
-    if (!campoCustomizadoOptional.isPresent())
-      throw new BadRequestException("Campo não encontrado");
-
-    List<CampoCustomizadoModel> listaDeCampoPadrao = new ArrayList<CampoCustomizadoModel>();
-
-    listaDeCampoPadrao.add(campoCustomizadoOptional.get());
-
-    return listaDeCampoPadrao;
+    return campoCustomizadoRepository.findWithFilter(id, nome, descricao, ativo, usuario.getId(),
+        pageable);
   }
 
   public CampoCustomizadoModel postCampoCustomisado(UsuarioModel usuario,
@@ -50,7 +41,7 @@ public class CampoCustomizadoService {
 
     campoCustomizado.setUsuario(usuario);
     campoCustomizado.setAtivo(true);
-    
+
     campoCustomizado = padronizar(campoCustomizado);
 
     return campoCustomizadoRepository.save(campoCustomizado);
@@ -61,9 +52,11 @@ public class CampoCustomizadoService {
   public CampoCustomizadoModel atualizarCampoCustomizado(UsuarioModel usuario,
       CampoCustomizadoModel campoCustomizado) throws BadRequestException, ForbiddenException {
 
-    CampoCustomizadoModel campoDoBanco = validaSeCampoExiste(campoCustomizado.getId());
+    boolean ativo = true;
 
-    validaIsDono(campoDoBanco, usuario);
+    CampoCustomizadoModel campoDoBanco =
+        validaSeCampoExiste(campoCustomizado.getId(), usuario.getId());
+    validaAtivo(campoDoBanco, ativo);
 
     campoCustomizado = padronizar(campoCustomizado);
 
@@ -71,60 +64,40 @@ public class CampoCustomizadoService {
     campoDoBanco.setNome(campoCustomizado.getNome());
     campoDoBanco.setPlaceHolder(campoCustomizado.getPlaceHolder());
     campoDoBanco.setToolTip(campoCustomizado.getToolTip());
-    campoDoBanco.setAtivo(campoCustomizado.isAtivo());
+
     return campoCustomizadoRepository.save(campoDoBanco);
   }
 
 
-  public CampoCustomizadoModel desativarCampoCustomizado(UsuarioModel usuario, Integer idCampo)
-      throws BadRequestException, ForbiddenException {
+  public CampoCustomizadoModel desativarCampoCustomizado(UsuarioModel usuario, Integer idCampo,
+      boolean ativo) throws BadRequestException, ForbiddenException {
 
+    CampoCustomizadoModel campoNoBanco = validaSeCampoExiste(idCampo, usuario.getId());
 
-    CampoCustomizadoModel campoNoBanco = validaSeCampoExiste(idCampo);
+    validaAtivo(campoNoBanco, ativo);
 
-    validaIsDono(campoNoBanco, usuario);
+    campoNoBanco.setAtivo(ativo);
 
-    if(!campoNoBanco.isAtivo())
-      throw new BadRequestException("Este campo já está inativo");
-    
-    campoNoBanco.setAtivo(false);
-    
     return campoCustomizadoRepository.save(campoNoBanco);
   }
 
   // ------ Validações e padronizações ------\\
 
-  public CampoCustomizadoModel validaSeCampoExiste(Integer idCampo) throws BadRequestException {
+  public CampoCustomizadoModel validaSeCampoExiste(Integer idCampo, Integer idUsuario)
+      throws BadRequestException {
     Optional<CampoCustomizadoModel> campoCustomizadoOptional =
-        campoCustomizadoRepository.findById(idCampo);
+        campoCustomizadoRepository.findByIdAndUsuario(idCampo, idUsuario);
     if (!campoCustomizadoOptional.isPresent())
       throw new BadRequestException("Campo não encontrado");
 
     return campoCustomizadoOptional.get();
   }
 
-  public void validaIsDono(CampoCustomizadoModel campo, UsuarioModel usuario)
-      throws ForbiddenException {
-    if (campo.getUsuario().getId() != usuario.getId())
-      throw new ForbiddenException("Sem autorização para atualizar esse campo");
-  }
-
-  private CampoPadraoModel validaCampoPadrao(CampoCustomizadoModel campoCustomizado)
-      throws BadRequestException {
-
-    Optional<CampoPadraoModel> CampoPadraoOptional =
-        campoPadraoRepository.findById(campoCustomizado.getCampoPadrao().getId());
-
-    if (!CampoPadraoOptional.isPresent())
-      throw new BadRequestException("Campo padrão inexistente");
-
-    return CampoPadraoOptional.get();
-  }
-
   public CampoCustomizadoModel padronizar(CampoCustomizadoModel campoCustomizado)
       throws BadRequestException {
 
-    CampoPadraoModel CampoPadrao = validaCampoPadrao(campoCustomizado);
+    CampoPadraoModel CampoPadrao =
+        campoPadraoService.validaCampoPadrao(campoCustomizado.getCampoPadrao().getId());
 
     campoCustomizado.setCampoPadrao(CampoPadrao);
 
@@ -141,6 +114,11 @@ public class CampoCustomizadoService {
       campoCustomizado.setToolTip(CampoPadrao.getToolTip());
 
     return campoCustomizado;
+  }
+
+  public void validaAtivo(CampoCustomizadoModel campo, boolean ativo) throws BadRequestException {
+    if (campo.isAtivo() == ativo)
+      throw new BadRequestException("campo está desativado des de " + campo.getDataAlteracao());
   }
 }
 

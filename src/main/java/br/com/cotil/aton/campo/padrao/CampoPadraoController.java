@@ -1,10 +1,9 @@
 package br.com.cotil.aton.campo.padrao;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,14 +28,17 @@ public class CampoPadraoController {
   }
 
   @GetMapping
-  public List<CampoPadraoModel> getCamposPadrao(HttpServletRequest request, @RequestHeader("Token") String token,
+  public Page<CampoPadraoModel> getCamposPadrao(HttpServletRequest request,
+      @RequestHeader("Token") String token,
       @RequestParam(value = "id", required = false) Integer id,
       @RequestParam(value = "nome", required = false) String nome,
-      @RequestParam(value = "descricao", required = false) String descricao) throws BadRequestException {
+      @RequestParam(value = "descricao", required = false) String descricao,
+      @RequestParam(value = "page", defaultValue = "0") Integer page,
+      @RequestParam(value = "size", defaultValue = "20") Integer size) throws BadRequestException {
 
     tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
-    return campoPadraoService.getCamposPadrao(id, nome, descricao);
+    return campoPadraoService.getCamposPadrao(id, nome, descricao, page, size);
   }
 
 

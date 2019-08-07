@@ -79,21 +79,14 @@ public class GrupoUsuarioService extends GrupoUsuarioConstantes {
   }
 
 
-  public GrupoUsuarioModel deleteGrupoUsuario(Integer idGrupoUsuario, UsuarioModel usuario)
-      throws BadRequestException, ForbiddenException {
+  public GrupoUsuarioModel deleteGrupoUsuario(Integer idUsuario, Integer idGrupo,
+      UsuarioModel usuario) throws BadRequestException, ForbiddenException {
+    boolean ativo = true;
 
-    Optional<GrupoUsuarioModel> grupoUsuarioOptional =
-        grupoUsuarioRepository.findById(idGrupoUsuario);
+    UsuarioModel usuarioParceiro = usuarioService.getUsuarioById(idUsuario);
+    GrupoModel grupo = getGrupo(idGrupo, idUsuario, ativo);
 
-
-    if (!grupoUsuarioOptional.isPresent())
-      throw new BadRequestException(USUARIO_NAO_ENCONTRADO);
-
-    GrupoUsuarioModel grupoUsuario = grupoUsuarioOptional.get();
-
-
-    if (grupoUsuario.getGrupo().getUsuario().getId() == usuario.getId())
-      throw new ForbiddenException(USUARIO_NAO_DONO);
+    GrupoUsuarioModel grupoUsuario = getGrupoUsuario(usuarioParceiro, grupo);
 
     grupoUsuario.setAtivo(false);
 
@@ -107,6 +100,17 @@ public class GrupoUsuarioService extends GrupoUsuarioConstantes {
         .findAllGruposByUsuario(usuario.getId(), Utils.setPageRequestConfig(page, size));
 
     return grupoUsuarioList;
+  }
+
+  public GrupoUsuarioModel getGrupoUsuario(UsuarioModel usuario, GrupoModel grupo)
+      throws BadRequestException {
+    Optional<GrupoUsuarioModel> grupoUsuarioOptional =
+        grupoUsuarioRepository.findByGrupoAndUsuario(usuario, grupo);
+
+    if (!grupoUsuarioOptional.isPresent())
+      throw new BadRequestException("Usuario não está no grupo");
+
+    return grupoUsuarioOptional.get();
   }
 
   public List<Integer> getAllIdGruposDoUsuario(UsuarioModel usuario)
@@ -133,16 +137,10 @@ public class GrupoUsuarioService extends GrupoUsuarioConstantes {
     return grupoUsuarioRepository.save(grupoUsuario);
   }
 
-
-  public List<GrupoUsuarioModel> getUsuariosDoGrupo(GrupoModel grupoModel) {
-
-    return grupoUsuarioRepository.findAllByGrupo(grupoModel.getId());
-  }
-
   public Page<GrupoModel> getGrupousuarioByIdGrupoAndIdUsuario(Integer idGrupo,
-      UsuarioModel usuario) {
+      Integer idUsuario) {
 
-    return grupoUsuarioRepository.getGruposByIdGrupoAndIdUsuario(idGrupo, usuario.getId(),
+    return grupoUsuarioRepository.getGruposByIdGrupoAndIdUsuario(idGrupo, idUsuario,
         Utils.setPageRequestConfig(0, 1));
   }
 
@@ -157,6 +155,18 @@ public class GrupoUsuarioService extends GrupoUsuarioConstantes {
 
     return grupoNoBancoOptional.get().getGrupo();
 
+  }
+  
+  public GrupoModel validarGrupo(GrupoModel grupo, UsuarioModel usuario)
+      throws BadRequestException, ForbiddenException {
+    
+    Optional<GrupoUsuarioModel> grupousuarioOptional =
+        grupoUsuarioRepository.getGrupousuarioByIdGrupoAndIdUsuario(grupo.getId(), usuario.getId());
+
+    if (!grupousuarioOptional.isPresent())
+      throw new BadRequestException("Grupo inexistente ou voce não faz parte deste grupo");
+
+    return grupousuarioOptional.get().getGrupo();
   }
 
 }

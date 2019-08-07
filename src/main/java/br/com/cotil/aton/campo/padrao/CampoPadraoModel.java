@@ -34,6 +34,9 @@ public class CampoPadraoModel {
   @Column(name = "PLACE_HOLDER")
   private String placeHolder;
   
+  @Column(name = "ATIVO")
+  private Boolean ativo;
+  
 
   public Integer getId() {
     return id;
@@ -81,6 +84,14 @@ public class CampoPadraoModel {
 
   public void setPlaceHolder(String placeHolder) {
     this.placeHolder = placeHolder;
+  }
+
+  public Boolean getAtivo() {
+    return ativo;
+  }
+
+  public void setAtivo(Boolean ativo) {
+    this.ativo = ativo;
   }
   
 }

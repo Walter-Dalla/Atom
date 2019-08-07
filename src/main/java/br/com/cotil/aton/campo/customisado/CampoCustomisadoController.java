@@ -40,13 +40,16 @@ public class CampoCustomisadoController {
       @RequestHeader("Token") String token,
       @RequestParam(value = "id", required = false) Integer id,
       @RequestParam(value = "nome", required = false) String nome,
-      @RequestParam(value = "descricao", required = false) String descricao)
-      throws BadRequestException {
+      @RequestParam(value = "descricao", required = false) String descricao,
+      @RequestParam(value = "ativo", defaultValue = "true") boolean ativo,
+      @RequestParam(value = "page", defaultValue = "0") Integer page,
+      @RequestParam(value = "size", defaultValue = "20") Integer size) throws BadRequestException {
 
     UsuarioModel usuario =
         tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
-    return campoCustomizadoService.getCampoCustomizado(usuario, id, nome, descricao);
+    return campoCustomizadoService.getCampoCustomizado(usuario, id, nome, descricao, ativo, page,
+        size);
   }
 
   @PostMapping
@@ -74,12 +77,13 @@ public class CampoCustomisadoController {
 
   @DeleteMapping("/{id}")
   public CampoCustomizadoModel desativarCampoCustomizado(HttpServletRequest request,
-      @RequestHeader("Token") String token, @PathVariable("id") Integer idCampo)
-      throws BadRequestException, ForbiddenException {
+      @RequestHeader("Token") String token,
+      @RequestParam(value = "ativo", defaultValue = "true") boolean ativo,
+      @PathVariable("id") Integer idCampo) throws BadRequestException, ForbiddenException {
 
     UsuarioModel usuario =
         tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
-    return campoCustomizadoService.desativarCampoCustomizado(usuario, idCampo);
+    return campoCustomizadoService.desativarCampoCustomizado(usuario, idCampo, ativo);
   }
 }

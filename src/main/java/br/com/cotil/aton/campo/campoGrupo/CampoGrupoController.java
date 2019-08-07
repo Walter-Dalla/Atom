@@ -70,12 +70,13 @@ public class CampoGrupoController {
 
   @DeleteMapping("/{id}")
   public CampoGrupoModel atualizarCampoParaUmGrupo(HttpServletRequest request,
-      @RequestHeader("Token") String token, @PathVariable("id") Integer idCampoGrupo)
+      @RequestHeader("Token") String token, @PathVariable("id") Integer idCampoGrupo,
+      @RequestParam(value = "ativo", required = false, defaultValue = "true") boolean ativo)
       throws BadRequestException, ForbiddenException {
 
     UsuarioModel usuario =
         tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
-    return campoGrupoService.desativarCampoParaUmGrupo(usuario, idCampoGrupo);
+    return campoGrupoService.desativarCampoParaUmGrupo(usuario, idCampoGrupo, ativo);
   }
 }

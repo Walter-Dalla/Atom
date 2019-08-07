@@ -1,10 +1,9 @@
 package br.com.cotil.aton.formularios.formulario;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -26,53 +25,63 @@ import br.com.cotil.aton.util.RequestUtils;
 @RequestMapping("/formulario")
 public class FormularioController {
 
-	TokenService tokenService;
+  TokenService tokenService;
 
-	FormularioService formularioService;
+  FormularioService formularioService;
 
-	@Autowired
-	public FormularioController(TokenService tokenService, FormularioService formularioService) {
-		super();
-		this.tokenService = tokenService;
-		this.formularioService = formularioService;
-	}
+  @Autowired
+  public FormularioController(TokenService tokenService, FormularioService formularioService) {
+    super();
+    this.tokenService = tokenService;
+    this.formularioService = formularioService;
+  }
 
-	@GetMapping
-	public List<FormularioModel> listaFormularios(HttpServletRequest request, @RequestHeader("Token") String token,
-			@RequestParam(value = "id", required = false) Integer id,
-			@RequestParam(value = "nomeFormulario", required = false) String nomeFormulario,
-			@RequestParam(value = "ativo", required = false, defaultValue = "true") boolean ativo) throws BadRequestException {
+  @GetMapping
+  public Page<FormularioModel> listaFormularios(HttpServletRequest request,
+      @RequestHeader("Token") String token,
+      @RequestParam(value = "id", required = false) Integer id,
+      @RequestParam(value = "nomeFormulario", required = false) String nomeFormulario,
+      @RequestParam(value = "ativo", required = false, defaultValue = "true") boolean ativo,
+      @RequestParam(value = "page", defaultValue = "0") Integer page,
+      @RequestParam(value = "size", defaultValue = "20") Integer size) throws BadRequestException {
 
-		UsuarioModel usuario = tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
+    UsuarioModel usuario =
+        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
-		return formularioService.listaFormularios(usuario, id, nomeFormulario, ativo);
-	}
+    return formularioService.listaFormularios(usuario, id, nomeFormulario, ativo, page, size);
+  }
 
-	@PostMapping
-	public FormularioModel criaFormularios(HttpServletRequest request, @RequestHeader("Token") String token,
-			@RequestBody FormularioModel formulario) throws BadRequestException {
+  @PostMapping
+  public FormularioModel criaFormularios(HttpServletRequest request,
+      @RequestHeader("Token") String token, @RequestBody FormularioModel formulario)
+      throws BadRequestException, ForbiddenException {
 
-		UsuarioModel usuario = tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
+    UsuarioModel usuario =
+        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
-		return formularioService.criaFormulario(usuario, formulario);
-	}
+    return formularioService.criaFormulario(usuario, formulario);
+  }
 
-	@PatchMapping
-	public FormularioModel atualizaFormulario(HttpServletRequest request, @RequestHeader("Token") String token,
-			@RequestBody FormularioModel formulario) throws BadRequestException, ForbiddenException {
+  @PatchMapping
+  public FormularioModel atualizaFormulario(HttpServletRequest request,
+      @RequestHeader("Token") String token, @RequestBody FormularioModel formulario)
+      throws BadRequestException, ForbiddenException {
 
-		UsuarioModel usuario = tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
+    UsuarioModel usuario =
+        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
-		return formularioService.atualizaFormulario(usuario, formulario);
-	}
+    return formularioService.atualizaFormulario(usuario, formulario);
+  }
 
-	@DeleteMapping("/{idFormulario}")
-	public FormularioModel desabilitaFormulario(HttpServletRequest request, @RequestHeader("Token") String token,
-			@PathVariable("idFormulario") Integer idFormulario) throws BadRequestException, ForbiddenException {
+  @DeleteMapping("/{idFormulario}")
+  public FormularioModel desabilitaFormulario(HttpServletRequest request,
+      @RequestHeader("Token") String token, @PathVariable("idFormulario") Integer idFormulario)
+      throws BadRequestException, ForbiddenException {
 
-		UsuarioModel usuario = tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
+    UsuarioModel usuario =
+        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
-		return formularioService.desabilitaFormulario(idFormulario, usuario);
-	}
+    return formularioService.desabilitaFormulario(idFormulario, usuario);
+  }
 
 }

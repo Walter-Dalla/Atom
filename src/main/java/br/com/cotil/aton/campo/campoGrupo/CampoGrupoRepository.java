@@ -1,6 +1,7 @@
 package br.com.cotil.aton.campo.campoGrupo;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,5 +32,9 @@ public interface CampoGrupoRepository extends JpaRepository<CampoGrupoModel, Int
   @Query("select cgm from CampoGrupoModel cgm where cgm.campo.id = :idCampo and cgm.grupo.id in :idsGruposList")
   List<CampoGrupoModel> findByIdCampoAndIdsGrupo(@Param("idCampo") Integer idCampo,
       @Param("idsGruposList") List<Integer> idsGruposList);
+
+  @Query("SELECT cgm FROM CampoGrupoModel cgm where cgm.id = :idCampoGrupo and cgm.campo.usuario = :idUsuario")
+  Optional<CampoGrupoModel> findByIdAndUsuario(@Param("idCampoGrupo") Integer idCampoGrupo,
+      @Param("idUsuario") Integer idUsuario);
 
 }

@@ -32,7 +32,7 @@ public class GrupoService {
     if (idGrupo == null)
       grupoList = grupoUsuarioService.getAllGruposDoUsuario(usuario, page, size);
     else
-      grupoList = grupoUsuarioService.getGrupousuarioByIdGrupoAndIdUsuario(idGrupo, usuario);
+      grupoList = grupoUsuarioService.getGrupousuarioByIdGrupoAndIdUsuario(idGrupo, usuario.getId());
 
     return grupoList;
   }
@@ -81,6 +81,5 @@ public class GrupoService {
       throws BadRequestException {
 
     return grupoUsuarioService.getGrupo(idGrupo, idUsuario, ativo);
-
   }
 }

@@ -51,7 +51,7 @@ public class CampoFormularioService {
   public List<CampoFormularioModel> listaCamposFormularios(UsuarioModel usuario,
       Integer idFormulario) throws BadRequestException, ForbiddenException {
 
-    FormularioModel formulario = formularioService.pegaFormularioDoBanco(idFormulario);
+    FormularioModel formulario = formularioService.pegaFormularioDoBanco(idFormulario, usuario);
 
     validarGrupoFormulario(formulario, usuario);
 
@@ -63,7 +63,7 @@ public class CampoFormularioService {
       CampoFormularioModel campoFormularioModel) throws BadRequestException, ForbiddenException {
 
     FormularioModel formulario =
-        formularioService.pegaFormularioDoBanco(campoFormularioModel.getFormulario().getId());
+        formularioService.pegaFormularioDoBanco(campoFormularioModel.getFormulario().getId(), usuario);
 
     campoFormularioModel.setFormulario(validarGrupoFormulario(formulario, usuario));
 
@@ -126,7 +126,7 @@ public class CampoFormularioService {
   private CampoCustomizadoModel validaCampo(CampoCustomizadoModel campo, UsuarioModel usuario)
       throws ForbiddenException, BadRequestException {
 
-    campoCustomizadoService.validaSeCampoExiste(campo.getId());
+    campoCustomizadoService.validaSeCampoExiste(campo.getId(), usuario.getId());
 
     List<Integer> idsGruposList = grupoUsuarioService.getAllIdGruposDoUsuario(usuario);
 
