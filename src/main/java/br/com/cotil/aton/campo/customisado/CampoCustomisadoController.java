@@ -3,6 +3,7 @@ package br.com.cotil.aton.campo.customisado;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -36,18 +37,18 @@ public class CampoCustomisadoController {
   }
 
   @GetMapping
-  public Object getCampoCustomizado(HttpServletRequest request,
+  public Page<CampoCustomizadoModel> getCampoCustomizado(HttpServletRequest request,
       @RequestHeader("Token") String token,
       @RequestParam(value = "id", required = false) Integer id,
       @RequestParam(value = "nome", required = false) String nome,
       @RequestParam(value = "descricao", required = false) String descricao,
-      @RequestParam(value = "ativo", defaultValue = "true") boolean ativo,
-      @RequestParam(value = "page", defaultValue = "0") Integer page,
-      @RequestParam(value = "size", defaultValue = "20") Integer size) throws BadRequestException {
+      @RequestParam(value = "ativo", defaultValue = "true", required = false) boolean ativo,
+      @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
+      @RequestParam(value = "size", defaultValue = "20", required = false) Integer size) throws BadRequestException {
 
     UsuarioModel usuario =
         tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
-
+    
     return campoCustomizadoService.getCampoCustomizado(usuario, id, nome, descricao, ativo, page,
         size);
   }

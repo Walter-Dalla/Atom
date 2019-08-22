@@ -21,8 +21,8 @@ public interface CampoCustomizadoRepository extends JpaRepository<CampoCustomiza
       + " and (ccm.nome like %:nome% or :nome is null)"
       + " and (ccm.descricao like %:descricao% or :descricao is null) "
       + " and (ccm.ativo = :ativo) " 
-      + " and (ccm.usuario = :idUsuario) "
-      + " and (ccm.campoPadrao.ativo = true)")
+      + " and (ccm.usuario.id = :idUsuario) "
+      + " and (ccm.campoPadrao.ativo = 1)")
   Page<CampoCustomizadoModel> findWithFilter(@Param("id") Integer id, @Param("nome") String nome,
       @Param("descricao") String descricao, @Param("ativo") boolean ativo,
       @Param("idUsuario") Integer idUsuario, Pageable pageable);

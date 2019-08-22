@@ -113,14 +113,9 @@ public class GrupoUsuarioService extends GrupoUsuarioConstantes {
     return grupoUsuarioOptional.get();
   }
 
-  public List<Integer> getAllIdGruposDoUsuario(UsuarioModel usuario)
-      throws BadRequestException, ForbiddenException {
+  public List<Integer> getAllIdGruposDoUsuario(UsuarioModel usuario){
 
     List<Integer> listaIdsGrupos = grupoUsuarioRepository.findAllIdGrupoByUsuario(usuario.getId());
-
-    if (listaIdsGrupos.isEmpty())
-      throw new ForbiddenException("Você não possui acesso a esse formulario");
-
 
     return listaIdsGrupos;
   }
@@ -167,6 +162,17 @@ public class GrupoUsuarioService extends GrupoUsuarioConstantes {
       throw new BadRequestException("Grupo inexistente ou voce não faz parte deste grupo");
 
     return grupousuarioOptional.get().getGrupo();
+  }
+  
+  public List<GrupoUsuarioModel> getAllGruposByUsuario(UsuarioModel usuario) throws BadRequestException {
+
+    List<GrupoUsuarioModel> grupoUsuarioList = grupoUsuarioRepository.findAllByUsuario(usuario.getId());
+
+    if(grupoUsuarioList.isEmpty())
+      throw new BadRequestException("Usuario não possui grupo");
+    
+    
+    return grupoUsuarioList;
   }
 
 }

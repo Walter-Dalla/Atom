@@ -12,8 +12,12 @@ public interface FormularioAcessoRepository extends JpaRepository<FormularioAces
 
   
   @Query("select fam from FormularioAcessoModel fam where fam.formulario.id = :idFormulario and fam.grupo.id in :idsGrupo")
-  List<FormularioAcessoModel> findAllByIdFormularioAndIdsGrupo(@Param("idFormulario") Integer idFormulario,
+  List<FormularioAcessoModel> pegaTodosOsAcessoDoFormularioDeAcordoComOGrupo(@Param("idFormulario") Integer idFormulario,
       @Param("idsGrupo") List<Integer> idsGrupo);
+
+
+  @Query("select fam from FormularioAcessoModel fam where fam.grupo.id in (:listaIdsGrupos)")
+  List<FormularioAcessoModel> findAllByGrupoId(@Param("listaIdsGrupos") List<Integer> listaIdsGrupos);
 
 
 }
