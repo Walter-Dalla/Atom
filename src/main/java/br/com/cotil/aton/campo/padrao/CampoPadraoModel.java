@@ -15,83 +15,136 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 public class CampoPadraoModel {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-  @Column(name = "NOME")
-  private String nome;
+	@Column(name = "NOME")
+	private String nome;
 
-  @Column(name = "TIPO")
-  private String tipo;
+	@Column(name = "TYPE")
+	private String type;
 
-  @Column(name = "DESCRICAO")
-  private String descricao;
+	@Column(name = "DESCRICAO")
+	private String descricao;
 
-  @Column(name = "TOOL_TIP")
-  private String toolTip;
+	@Column(name = "TOOL_TIP")
+	private String toolTip;
 
-  @Column(name = "PLACE_HOLDER")
-  private String placeHolder;
-  
-  @Column(name = "ATIVO")
-  private Boolean ativo;
-  
+	@Column(name = "PLACE_HOLDER")
+	private String placeHolder;
 
-  public Integer getId() {
-    return id;
-  }
+	@Column(name = "ATIVO")
+	private Boolean ativo;
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
+	@Column(name = "CLASS_NAME")
+	private Boolean className;
 
-  public String getNome() {
-    return nome;
-  }
+	@Column(name = "LABEL")
+	private String label;
 
-  public void setNome(String nome) {
-    this.nome = nome;
-  }
+	@Column(name = "MAX_LENGHT")
+	private String maxlenght;
 
-  public String getTipo() {
-    return tipo;
-  }
+	@Column(name = "MIN_LENGHT")
+	private String minlenght;
 
-  public void setTipo(String tipo) {
-    this.tipo = tipo;
-  }
+	@Column(name = "DEFAULT_VALUE")
+	private String defaultValue;
 
-  public String getDescricao() {
-    return descricao;
-  }
+	public Integer getId() {
+		return id;
+	}
 
-  public void setDescricao(String descricao) {
-    this.descricao = descricao;
-  }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-  public String getToolTip() {
-    return toolTip;
-  }
+	public String getNome() {
+		return nome;
+	}
 
-  public void setToolTip(String toolTip) {
-    this.toolTip = toolTip;
-  }
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 
-  public String getPlaceHolder() {
-    return placeHolder;
-  }
+	public String getType() {
+		return type;
+	}
 
-  public void setPlaceHolder(String placeHolder) {
-    this.placeHolder = placeHolder;
-  }
+	public void setType(String type) {
+		this.type = type;
+	}
 
-  public Boolean getAtivo() {
-    return ativo;
-  }
+	public String getDescricao() {
+		return descricao;
+	}
 
-  public void setAtivo(Boolean ativo) {
-    this.ativo = ativo;
-  }
-  
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	public String getToolTip() {
+		return toolTip;
+	}
+
+	public void setToolTip(String toolTip) {
+		this.toolTip = toolTip;
+	}
+
+	public String getPlaceHolder() {
+		return placeHolder;
+	}
+
+	public void setPlaceHolder(String placeHolder) {
+		this.placeHolder = placeHolder;
+	}
+
+	public Boolean getAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
+	}
+
+	public Boolean getClassName() {
+		return className;
+	}
+
+	public void setClassName(Boolean className) {
+		this.className = className;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	public String getMaxlenght() {
+		return maxlenght;
+	}
+
+	public void setMaxlenght(String maxlenght) {
+		this.maxlenght = maxlenght;
+	}
+
+	public String getMinlenght() {
+		return minlenght;
+	}
+
+	public void setMinlenght(String minlenght) {
+		this.minlenght = minlenght;
+	}
+
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+
+	public void setDefaultValue(String defaultValue) {
+		this.defaultValue = defaultValue;
+	}
 }

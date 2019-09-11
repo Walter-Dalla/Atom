@@ -33,6 +33,10 @@ public class CampoPadraoService {
   }
 
   public CampoPadraoModel validaCampoPadrao(Integer id) throws BadRequestException {
+	
+	if(Utils.isNullOrEmpty(id))
+		throw new BadRequestException("Campo não encontrado");
+	
     Optional<CampoPadraoModel> campoPadrao = campoPadraoRepository.findById(id);
 
     if (!campoPadrao.isPresent())

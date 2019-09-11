@@ -14,22 +14,16 @@ import br.com.cotil.aton.usuario.usuario.UsuarioModel;
 @Repository
 public interface CampoCustomizadoRepository extends JpaRepository<CampoCustomizadoModel, Integer> {
 
-  Page<CampoCustomizadoModel> findAllByUsuario(UsuarioModel usuario, Pageable pageable);
+	Page<CampoCustomizadoModel> findAllByUsuario(UsuarioModel usuario, Pageable pageable);
 
+	@Query("select ccm from CampoCustomizadoModel ccm where (ccm.id = :id or :id is null) "
+			+ " and (ccm.nome like %:nome% or :nome is null)" + " and (ccm.ativo = :ativo) "
+			+ " and (ccm.usuario.id = :idUsuario) " + " and (ccm.campoPadrao.ativo = 1)")
+	Page<CampoCustomizadoModel> findWithFilter(@Param("id") Integer id, @Param("nome") String nome,
+			@Param("ativo") boolean ativo, @Param("idUsuario") Integer idUsuario, Pageable pageable);
 
-  @Query("select ccm from CampoCustomizadoModel ccm where (ccm.id = :id or :id is null) "
-      + " and (ccm.nome like %:nome% or :nome is null)"
-      + " and (ccm.descricao like %:descricao% or :descricao is null) "
-      + " and (ccm.ativo = :ativo) " 
-      + " and (ccm.usuario.id = :idUsuario) "
-      + " and (ccm.campoPadrao.ativo = 1)")
-  Page<CampoCustomizadoModel> findWithFilter(@Param("id") Integer id, @Param("nome") String nome,
-      @Param("descricao") String descricao, @Param("ativo") boolean ativo,
-      @Param("idUsuario") Integer idUsuario, Pageable pageable);
-
-
-  Optional<CampoCustomizadoModel> findByIdAndUsuario(Integer id, Integer idUsuario);
-
-
+	@Query("select ccm from CampoCustomizadoModel ccm where (ccm.id = :id) " + " and (ccm.usuario.id = :idUsuario) "
+			+ " and (ccm.campoPadrao.ativo = 1)")
+	Optional<CampoCustomizadoModel> findByIdAndUsuario(@Param("id") Integer id, @Param("idUsuario") Integer usuario);
 
 }

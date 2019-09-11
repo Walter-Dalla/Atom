@@ -46,9 +46,9 @@ public class FormularioAcessoService {
   }
 
   public List<FormularioAcessoModel> pegaTodosOsAcessoDoFormularioDeAcordoComOGrupo(Integer idFormulario,
-      List<Integer> idsGruposList) throws ForbiddenException {
+      List<Integer> idsGruposList, Integer idUsuario) throws ForbiddenException {
     List<FormularioAcessoModel> formularioAcessoList =
-        formularioAcessoRepository.pegaTodosOsAcessoDoFormularioDeAcordoComOGrupo(idFormulario, idsGruposList);
+        formularioAcessoRepository.pegaTodosOsAcessoDoFormularioDeAcordoComOGrupo(idFormulario, idsGruposList, idUsuario);
 
     if (formularioAcessoList.isEmpty())
       throw new ForbiddenException("Você não possui acesso a esse formulario");

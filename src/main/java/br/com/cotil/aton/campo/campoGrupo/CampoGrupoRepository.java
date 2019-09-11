@@ -16,14 +16,12 @@ public interface CampoGrupoRepository extends JpaRepository<CampoGrupoModel, Int
   @Query("select cgm from  CampoGrupoModel cgm where "
       + " (:idCampo is null or cgm.campo.id = :idCampo) "
       + " and (:nomeCampo is null or cgm.campo.nome like %:nomeCampo%) "
-      + " and (:descricaoCampo is null or cgm.campo.descricao like %:descricaoCampo%) "
       + " and (:idGrupo is null or cgm.grupo.id = :idGrupo) "
       + " and (:nomeGrupo is null or cgm.grupo.nome like %:nomeGrupo%) "
       + " and (:descricaoGrupo is null or cgm.grupo.descricao like %:descricaoGrupo%) "
       + " and cgm.grupo.id in (:idsDosGruoposDoUsuario) " + " and cgm.ativo = :ativo")
   Page<CampoGrupoModel> findByIdCampoAndNomeCampoAndDescricaoCampoAndIdGrupoAndNomeGrupoAndDescricaoGrupo(
-      @Param("idCampo") Integer idCampo, @Param("nomeCampo") String nomeCampo,
-      @Param("descricaoCampo") String descricaoCampo, @Param("idGrupo") Integer idGrupo,
+      @Param("idCampo") Integer idCampo, @Param("nomeCampo") String nomeCampo, @Param("idGrupo") Integer idGrupo,
       @Param("nomeGrupo") String nomeGrupo, @Param("descricaoGrupo") String descricaoGrupo,
       @Param("idsDosGruoposDoUsuario") List<Integer> idsDosGruoposDoUsuario,
       @Param("ativo") boolean ativo, Pageable pageable);

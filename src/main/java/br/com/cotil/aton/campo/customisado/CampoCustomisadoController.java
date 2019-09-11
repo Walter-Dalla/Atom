@@ -41,7 +41,6 @@ public class CampoCustomisadoController {
       @RequestHeader("Token") String token,
       @RequestParam(value = "id", required = false) Integer id,
       @RequestParam(value = "nome", required = false) String nome,
-      @RequestParam(value = "descricao", required = false) String descricao,
       @RequestParam(value = "ativo", defaultValue = "true", required = false) boolean ativo,
       @RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
       @RequestParam(value = "size", defaultValue = "20", required = false) Integer size) throws BadRequestException {
@@ -49,7 +48,7 @@ public class CampoCustomisadoController {
     UsuarioModel usuario =
         tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
     
-    return campoCustomizadoService.getCampoCustomizado(usuario, id, nome, descricao, ativo, page,
+    return campoCustomizadoService.getCampoCustomizado(usuario, id, nome, ativo, page,
         size);
   }
 

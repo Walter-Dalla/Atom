@@ -46,7 +46,7 @@ public class CampoGrupoService {
 
     return campoGrupoRepository
         .findByIdCampoAndNomeCampoAndDescricaoCampoAndIdGrupoAndNomeGrupoAndDescricaoGrupo(idCampo,
-            nomeCampo, descricaoCampo, idGrupo, nomeGrupo, descricaoGrupo,
+            nomeCampo, idGrupo, nomeGrupo, descricaoGrupo,
             listaDeIdDosGruposDoUsuario, ativo, Utils.setPageRequestConfig(page, size));
 
   }

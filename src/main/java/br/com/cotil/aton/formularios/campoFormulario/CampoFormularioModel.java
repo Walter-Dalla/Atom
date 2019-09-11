@@ -1,4 +1,4 @@
-package br.com.cotil.aton.formularios.campoCustomizado;
+package br.com.cotil.aton.formularios.campoFormulario;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
