@@ -15,8 +15,8 @@ public class CampoCustomizadoUtils {
 		if (Utils.isNullOrEmpty(campoCustomizado.getNome()))
 			campoCustomizado.setNome(CampoPadrao.getNome());
 
-		if (Utils.isNullOrEmpty(campoCustomizado.getPlaceHolder()))
-			campoCustomizado.setPlaceHolder(CampoPadrao.getPlaceHolder());
+		if (Utils.isNullOrEmpty(campoCustomizado.getPlaceholder()))
+			campoCustomizado.setPlaceholder(CampoPadrao.getPlaceHolder());
 
 		if (Utils.isNullOrEmpty(campoCustomizado.getToolTip()))
 			campoCustomizado.setToolTip(CampoPadrao.getToolTip());

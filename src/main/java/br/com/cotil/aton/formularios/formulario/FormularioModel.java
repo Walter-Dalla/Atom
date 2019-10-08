@@ -47,6 +47,9 @@ public class FormularioModel {
 	@LastModifiedDate
 	@Column(name = "DATA_ATUALIZACAO")
 	private Date dataUltimaAtualizacao;
+	
+	@Column(name = "PRONTO")
+	private boolean pronto;
 
 	public Integer getId() {
 		return id;
@@ -103,7 +106,13 @@ public class FormularioModel {
 	public void setAtivo(boolean ativo) {
 		this.ativo = ativo;
 	}
-	
-	
+
+	public boolean isPronto() {
+		return pronto;
+	}
+
+	public void setPronto(boolean pronto) {
+		this.pronto = pronto;
+	}
 	
 }

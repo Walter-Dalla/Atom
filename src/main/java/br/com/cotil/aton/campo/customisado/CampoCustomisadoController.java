@@ -73,6 +73,7 @@ public class CampoCustomisadoController {
 
     return campoCustomizadoService.atualizarCampoCustomizado(usuario, campoCustomizado);
   }
+  
 
 
   @DeleteMapping("/{id}")
@@ -85,5 +86,28 @@ public class CampoCustomisadoController {
         tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
 
     return campoCustomizadoService.desativarCampoCustomizado(usuario, idCampo, ativo);
+  }
+
+  
+  @PostMapping("/marcar")
+  public CampoCustomizadoModel marcarCampoCustomizado(HttpServletRequest request,
+		  @RequestHeader("Token") String token, @RequestParam("idCampo") Integer idCampo)
+				  throws BadRequestException, ForbiddenException {
+	  
+	  UsuarioModel usuario =
+			  tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
+	  
+	  return campoCustomizadoService.marcarCampoCustomizado(usuario, idCampo);
+  }
+  
+  @PostMapping("/desmarcar")
+  public CampoCustomizadoModel desmarcarCampoCustomizado(HttpServletRequest request,
+      @RequestHeader("Token") String token, @RequestParam("idCampo") Integer idCampo)
+      throws BadRequestException, ForbiddenException {
+
+    UsuarioModel usuario =
+        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
+
+    return campoCustomizadoService.desmarcarCampoCustomizado(usuario, idCampo);
   }
 }

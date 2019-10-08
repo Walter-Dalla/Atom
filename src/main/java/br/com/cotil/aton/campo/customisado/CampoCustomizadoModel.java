@@ -58,7 +58,7 @@ public class CampoCustomizadoModel {
 	private String toolTip;
 
 	@Column(name = "PLACE_HOLDER")
-	private String placeHolder;
+	private String placeholder;
 	
 	@Column(name = "LABEL")
 	private String label;
@@ -77,6 +77,27 @@ public class CampoCustomizadoModel {
 	
 	@Column(name = "MARCADO")
 	private boolean marcado;
+	
+	public CampoCustomizadoModel() {}
+	
+	public CampoCustomizadoModel(CampoCustomizadoModel campoCustomizadoModel) {
+		super();
+		this.id = campoCustomizadoModel.getId();
+		this.usuario = campoCustomizadoModel.getUsuario();
+		this.campoPadrao = campoCustomizadoModel.getCampoPadrao();
+		this.nome = campoCustomizadoModel.getNome();
+		this.dataCriacao = campoCustomizadoModel.getDataCriacao();
+		this.dataAlteracao = campoCustomizadoModel.getDataAlteracao();
+		this.type = campoCustomizadoModel.getType();
+		this.toolTip = campoCustomizadoModel.getToolTip();
+		this.placeholder = campoCustomizadoModel.getPlaceholder();
+		this.label = campoCustomizadoModel.getLabel();
+		this.maxlenght = campoCustomizadoModel.getMaxlenght();
+		this.minlenght = campoCustomizadoModel.getMinlenght();
+		this.defaultValue = campoCustomizadoModel.getDefaultValue();
+		this.ativo = campoCustomizadoModel.isAtivo();
+		this.marcado = campoCustomizadoModel.isMarcado();
+	}
 
 	public Integer getId() {
 		return id;
@@ -142,12 +163,12 @@ public class CampoCustomizadoModel {
 		this.toolTip = toolTip;
 	}
 
-	public String getPlaceHolder() {
-		return placeHolder;
+	public String getPlaceholder() {
+		return placeholder;
 	}
 
-	public void setPlaceHolder(String placeHolder) {
-		this.placeHolder = placeHolder;
+	public void setPlaceholder(String placeHolder) {
+		this.placeholder = placeHolder;
 	}
 
 	public String getLabel() {

@@ -30,7 +30,7 @@ public class CampoCustomizadoService {
 
 		Pageable pageable = Utils.setPageRequestConfig(page, size);
 
-		return campoCustomizadoRepository.findWithFilter(id, nome, ativo, usuario.getId(), pageable);
+		return campoCustomizadoRepository.findWithFilter(id, nome, ativo, usuario.getId(), true, pageable);
 	}
 
 	public CampoCustomizadoModel postCampoCustomisado(UsuarioModel usuario, CampoCustomizadoModel campoCustomizado)
@@ -38,7 +38,8 @@ public class CampoCustomizadoService {
 
 		campoCustomizado.setUsuario(usuario);
 		campoCustomizado.setAtivo(true);
-		campoCustomizado.setCampoPadrao(campoPadraoService.validaCampoPadrao(campoCustomizado.getCampoPadrao().getId()));
+		campoCustomizado
+				.setCampoPadrao(campoPadraoService.validaCampoPadrao(campoCustomizado.getCampoPadrao().getId()));
 		campoCustomizado = CampoCustomizadoUtils.padronizar(campoCustomizado);
 
 		return campoCustomizadoRepository.save(campoCustomizado);
@@ -56,7 +57,7 @@ public class CampoCustomizadoService {
 		campoCustomizado = CampoCustomizadoUtils.padronizar(campoCustomizado);
 
 		campoDoBanco.setNome(campoCustomizado.getNome());
-		campoDoBanco.setPlaceHolder(campoCustomizado.getPlaceHolder());
+		campoDoBanco.setPlaceholder(campoCustomizado.getPlaceholder());
 		campoDoBanco.setToolTip(campoCustomizado.getToolTip());
 
 		return campoCustomizadoRepository.save(campoDoBanco);
@@ -69,9 +70,12 @@ public class CampoCustomizadoService {
 
 		validaAtivo(campoNoBanco, ativo);
 
-		campoNoBanco.setAtivo(ativo);
-
-		return campoCustomizadoRepository.save(campoNoBanco);
+		if(campoNoBanco.isMarcado())
+			throw new BadRequestException("O campo não pode ser deletado pois está marcado!");
+		
+		campoCustomizadoRepository.delete(campoNoBanco);
+		
+		return campoNoBanco;
 	}
 
 	// ------ Validações e padronizações ------\\
@@ -84,9 +88,18 @@ public class CampoCustomizadoService {
 
 		return campoCustomizadoOptional.get();
 	}
+	
+	public CampoCustomizadoModel validaSeCampoExiste(Integer idCampo) throws BadRequestException {
+		Optional<CampoCustomizadoModel> campoCustomizadoOptional = campoCustomizadoRepository
+				.findById(idCampo);
+		if (!campoCustomizadoOptional.isPresent())
+			throw new BadRequestException("Campo não encontrado");
 
+		return campoCustomizadoOptional.get();
+	}
+	
 	public void validaAtivo(CampoCustomizadoModel campo, boolean ativo) throws BadRequestException {
-		if (campo.isAtivo() == ativo)
+		if (campo.isAtivo() != ativo)
 			throw new BadRequestException("campo está desativado des de " + campo.getDataAlteracao());
 	}
 
@@ -98,5 +111,35 @@ public class CampoCustomizadoService {
 			throw new BadRequestException("Campo não encontrado");
 
 		return pageCampo.getContent().get(0);
+	}
+
+	public CampoCustomizadoModel marcarCampoCustomizado(UsuarioModel usuario, Integer idCampo)
+			throws BadRequestException {
+
+		boolean ativo = true;
+
+		CampoCustomizadoModel campoDoBanco = validaSeCampoExiste(idCampo, usuario.getId());
+		validaAtivo(campoDoBanco, ativo);
+		
+		CampoCustomizadoModel campo = new CampoCustomizadoModel(campoDoBanco);
+		
+		campo.setMarcado(true);
+		campo.setId(0);
+		campo.setDataAlteracao(null);
+		campo.setDataCriacao(null);
+		
+		return campoCustomizadoRepository.save(campo);
+	}
+
+	public CampoCustomizadoModel desmarcarCampoCustomizado(UsuarioModel usuario, Integer idCampo) throws BadRequestException {
+		
+		CampoCustomizadoModel campoNoBanco = validaSeCampoExiste(idCampo, usuario.getId());
+
+		validaAtivo(campoNoBanco, true);
+		
+		campoCustomizadoRepository.delete(campoNoBanco);
+
+		
+		return campoNoBanco;
 	}
 }

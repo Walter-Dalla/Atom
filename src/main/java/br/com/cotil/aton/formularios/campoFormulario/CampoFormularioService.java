@@ -59,15 +59,22 @@ public class CampoFormularioService {
 	public CampoFormularioModel criaFormulario(UsuarioModel usuario, CampoFormularioModel campoFormularioModel)
 			throws BadRequestException, ForbiddenException, UnauthorizedException {
 
+		Integer idFormulario = campoFormularioModel.getFormulario().getId();
+		
 		FormularioModel formulario = formularioService
-				.pegaFormularioDoBanco(campoFormularioModel.getFormulario().getId(), usuario);
+				.pegaFormularioDoBanco(idFormulario, usuario);
 
 		campoFormularioModel.setFormulario(formulario);
 
 		CampoCustomizadoModel campo = campoCustomizadoService.getCampoCustomizado(usuario,
 				campoFormularioModel.getCampo().getId());
 
-		campoFormularioModel.setCampo(CampoUtils.validaCampo(campo, usuario));
+		CampoUtils.validaCampo(campo, usuario);
+
+		CampoCustomizadoModel campoCustomizadoModel = new CampoCustomizadoModel(campo);
+		campoCustomizadoModel.setId(0);
+		campoCustomizadoModel.setMarcado(false);
+		campoFormularioModel.setCampo(campoCustomizadoService.postCampoCustomisado(usuario, campoCustomizadoModel));
 
 		campoFormularioModel.setAtivo(true);
 
@@ -84,11 +91,26 @@ public class CampoFormularioService {
 
 		CampoFormularioModel campoFormulario = campoFormularioOptional.get();
 
-		campoCustomizadoService.validaSeCampoExiste(campoFormulario.campo.getId(), usuario.getId());
+		campoCustomizadoService.validaSeCampoExiste(campoFormulario.getCampo().getId(), usuario.getId());
 
 		campoFormulario.setAtivo(false);
 
 		return campoFormularioRepository.save(campoFormulario);
+	}
+
+	public List<CampoFormularioModel> findAllByFormulario(Integer id) {
+		return campoFormularioRepository.findAllByFormulario(id);
+	}
+
+	public CampoFormularioModel validaCampoFormulario(CampoFormularioModel campoFormularioModel)
+			throws BadRequestException, UnauthorizedException {
+		
+		Optional<CampoFormularioModel> campoFormularioOptional = campoFormularioRepository.findById(campoFormularioModel.getId());
+		
+		CampoFormualarioUtils.validadarFormulario(campoFormularioOptional);
+		
+		return campoFormularioModel;
+
 	}
 
 }
