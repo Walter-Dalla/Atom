@@ -22,6 +22,7 @@ import br.com.cotil.aton.usuario.usuario.UsuarioModel;
 @Table(name = "FORMULARIO")
 @EntityListeners(AuditingEntityListener.class)
 public class FormularioModel {
+	
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
