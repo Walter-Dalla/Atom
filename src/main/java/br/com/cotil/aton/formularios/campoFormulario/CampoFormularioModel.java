@@ -38,6 +38,9 @@ public class CampoFormularioModel {
 
 	@Column(name = "ATIVO")
 	private boolean ativo;
+	
+	@Column(name = "PUBLICADO")
+	private boolean publicado;
 
 	public Integer getId() {
 		return id;
@@ -71,4 +74,14 @@ public class CampoFormularioModel {
 		this.ativo = ativo;
 	}
 
+	public boolean isPublicado() {
+		return publicado;
+	}
+
+	public void setPublicado(boolean publicado) {
+		this.publicado = publicado;
+	}
+	
+	
+	
 }

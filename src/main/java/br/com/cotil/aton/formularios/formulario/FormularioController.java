@@ -72,6 +72,17 @@ public class FormularioController {
 
     return formularioService.atualizaFormulario(usuario, formulario);
   }
+  
+  @PatchMapping("/{idFormulario}")
+  public FormularioModel publicaFormulario(HttpServletRequest request,
+      @RequestHeader("Token") String token, @PathVariable("idFormulario") Integer idFormulario)
+      throws BadRequestException, ForbiddenException {
+
+    UsuarioModel usuario =
+        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
+
+    return formularioService.publicaFormulario(usuario, idFormulario);
+  }
 
   @DeleteMapping("/{idFormulario}")
   public FormularioModel desabilitaFormulario(HttpServletRequest request,

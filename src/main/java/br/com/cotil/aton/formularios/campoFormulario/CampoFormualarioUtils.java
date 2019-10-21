@@ -23,7 +23,7 @@ public class CampoFormualarioUtils {
 	}
 	
 	public static void validadarFormulario(FormularioModel formulario) throws UnauthorizedException {
-		if (!formulario.isPronto())
+		if (!formulario.isPublicado())
 			throw new UnauthorizedException("Formulario inexistente");
 	}
 	

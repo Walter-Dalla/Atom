@@ -48,8 +48,8 @@ public class FormularioModel {
 	@Column(name = "DATA_ATUALIZACAO")
 	private Date dataUltimaAtualizacao;
 	
-	@Column(name = "PRONTO")
-	private boolean pronto;
+	@Column(name = "PUBLICADO")
+	private boolean publicado;
 
 	public Integer getId() {
 		return id;
@@ -107,12 +107,14 @@ public class FormularioModel {
 		this.ativo = ativo;
 	}
 
-	public boolean isPronto() {
-		return pronto;
+	public boolean isPublicado() {
+		return publicado;
 	}
 
-	public void setPronto(boolean pronto) {
-		this.pronto = pronto;
+	public void setPublicado(boolean publicado) {
+		this.publicado = publicado;
 	}
+
+	
 	
 }

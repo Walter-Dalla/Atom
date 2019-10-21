@@ -77,7 +77,7 @@ public class CampoFormularioService {
 		campoFormularioModel.setCampo(campoCustomizadoService.postCampoCustomisado(usuario, campoCustomizadoModel));
 
 		campoFormularioModel.setAtivo(true);
-
+		campoFormularioModel.setPublicado(formulario.isPublicado());
 		return campoFormularioRepository.save(campoFormularioModel);
 	}
 
@@ -92,12 +92,17 @@ public class CampoFormularioService {
 		CampoFormularioModel campoFormulario = campoFormularioOptional.get();
 
 		campoCustomizadoService.validaSeCampoExiste(campoFormulario.getCampo().getId(), usuario.getId());
-
-		campoFormulario.setAtivo(false);
-
-		return campoFormularioRepository.save(campoFormulario);
+		if(!campoFormulario.isPublicado()) {
+			campoFormularioRepository.delete(campoFormulario);
+		}else {
+			campoFormulario.setAtivo(false);
+			return campoFormularioRepository.save(campoFormulario);
+		}
+		
+		
+		return campoFormulario;
 	}
-
+	
 	public List<CampoFormularioModel> findAllByFormulario(Integer id) {
 		return campoFormularioRepository.findAllByFormulario(id);
 	}

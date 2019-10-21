@@ -78,6 +78,9 @@ public class CampoCustomizadoModel {
 	@Column(name = "MARCADO")
 	private boolean marcado;
 	
+	@Column(name = "PUBLICADO")
+	private boolean publicado;
+	
 	public CampoCustomizadoModel() {}
 	
 	public CampoCustomizadoModel(CampoCustomizadoModel campoCustomizadoModel) {
