@@ -22,16 +22,16 @@ public class CampoCustomizadoUtils {
 			campoCustomizado.setToolTip(CampoPadrao.getToolTip());
 
 		if (Utils.isNullOrEmpty(campoCustomizado.getDefaultValue()))
-			campoCustomizado.setToolTip(CampoPadrao.getDefaultValue());
+			campoCustomizado.setDefaultValue(CampoPadrao.getDefaultValue());
 
 		if (Utils.isNullOrEmpty(campoCustomizado.getLabel()))
-			campoCustomizado.setToolTip(CampoPadrao.getLabel());
+			campoCustomizado.setLabel(CampoPadrao.getLabel());
 
 		if (Utils.isNullOrEmpty(campoCustomizado.getMaxlenght()) || (campoCustomizado.getMaxlenght() > 2147483646))
-			campoCustomizado.setToolTip(CampoPadrao.getMaxlenght());
+			campoCustomizado.setMaxlenght(CampoPadrao.getMaxlenght());
 
 		if (Utils.isNullOrEmpty(campoCustomizado.getMinlenght()) || (campoCustomizado.getMinlenght() > -2147483648))
-			campoCustomizado.setToolTip(CampoPadrao.getMinlenght());
+			campoCustomizado.setMinlenght(CampoPadrao.getMinlenght());
 
 		return campoCustomizado;
 	}

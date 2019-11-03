@@ -26,11 +26,11 @@ public class CampoCustomizadoService {
 	}
 
 	public Page<CampoCustomizadoModel> getCampoCustomizado(UsuarioModel usuario, Integer id, String nome, boolean ativo,
-			Integer page, Integer size) throws BadRequestException {
+			Boolean marcado, Integer page, Integer size) throws BadRequestException {
 
 		Pageable pageable = Utils.setPageRequestConfig(page, size);
 
-		return campoCustomizadoRepository.findWithFilter(id, nome, ativo, usuario.getId(), true, pageable);
+		return campoCustomizadoRepository.findWithFilter(id, nome, ativo, usuario.getId(), marcado, pageable);
 	}
 
 	public CampoCustomizadoModel postCampoCustomisado(UsuarioModel usuario, CampoCustomizadoModel campoCustomizado)
@@ -105,7 +105,7 @@ public class CampoCustomizadoService {
 
 	public CampoCustomizadoModel getCampoCustomizado(UsuarioModel usuario, Integer id) throws BadRequestException {
 
-		Page<CampoCustomizadoModel> pageCampo = getCampoCustomizado(usuario, id, null, true, 0, 1);
+		Page<CampoCustomizadoModel> pageCampo = getCampoCustomizado(usuario, id, null, true, null, 0, 1);
 
 		if (pageCampo.getContent().isEmpty())
 			throw new BadRequestException("Campo não encontrado");

@@ -44,10 +44,10 @@ public class CampoPadraoModel {
 	private String label;
 
 	@Column(name = "MAX_LENGHT")
-	private String maxlenght;
+	private Integer maxlenght;
 
 	@Column(name = "MIN_LENGHT")
-	private String minlenght;
+	private Integer minlenght;
 
 	@Column(name = "DEFAULT_VALUE")
 	private String defaultValue;
@@ -124,19 +124,19 @@ public class CampoPadraoModel {
 		this.label = label;
 	}
 
-	public String getMaxlenght() {
+	public Integer getMaxlenght() {
 		return maxlenght;
 	}
 
-	public void setMaxlenght(String maxlenght) {
+	public void setMaxlenght(Integer maxlenght) {
 		this.maxlenght = maxlenght;
 	}
 
-	public String getMinlenght() {
+	public Integer getMinlenght() {
 		return minlenght;
 	}
 
-	public void setMinlenght(String minlenght) {
+	public void setMinlenght(Integer minlenght) {
 		this.minlenght = minlenght;
 	}
 

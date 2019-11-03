@@ -63,7 +63,10 @@ public class CampoFormularioService {
 		
 		FormularioModel formulario = formularioService
 				.pegaFormularioDoBanco(idFormulario, usuario);
-
+		
+		if(formulario.isPublicado())
+			throw new BadRequestException("Esse formulario já foi publicado e não se pode adicionar mais campos ao mesmo");
+		
 		campoFormularioModel.setFormulario(formulario);
 
 		CampoCustomizadoModel campo = campoCustomizadoService.getCampoCustomizado(usuario,
@@ -88,15 +91,14 @@ public class CampoFormularioService {
 
 		if (!campoFormularioOptional.isPresent())
 			throw new BadRequestException("Campo formulario inexistente");
-
+		
 		CampoFormularioModel campoFormulario = campoFormularioOptional.get();
 
 		campoCustomizadoService.validaSeCampoExiste(campoFormulario.getCampo().getId(), usuario.getId());
 		if(!campoFormulario.isPublicado()) {
 			campoFormularioRepository.delete(campoFormulario);
 		}else {
-			campoFormulario.setAtivo(false);
-			return campoFormularioRepository.save(campoFormulario);
+			throw new BadRequestException("Esse formulario já foi publicado e não se pode deletar os campos já existentes");
 		}
 		
 		
