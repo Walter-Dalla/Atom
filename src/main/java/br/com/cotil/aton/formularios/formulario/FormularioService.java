@@ -36,12 +36,18 @@ public class FormularioService {
 	
 
 	public Page<FormularioModel> listaFormularios(UsuarioModel usuario, Integer id, String nomeFormulario,
-			boolean ativo, Integer page, Integer size) {
+			boolean ativo, Integer page, Integer size) throws BadRequestException {
 
 		Page<FormularioModel> lista = formularioRepository.findByIdAndNomeFormularioAndIdUsuarioAndAtivo(id,
 				nomeFormulario, usuario.getId(), ativo, Utils.setPageRequestConfig(page, size));
-
 		return lista;
+	}
+	
+	public Page<FormularioModel> listaFormularios(Integer id, String nomeFormulario,
+			boolean ativo, Integer page, Integer size) throws BadRequestException {
+
+		return formularioRepository.findByIdAndNomeFormularioAndIdUsuarioAndAtivo(id,
+				nomeFormulario, ativo, Utils.setPageRequestConfig(page, size));
 	}
 
 

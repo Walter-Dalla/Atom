@@ -21,6 +21,13 @@ public interface FormularioRepository extends JpaRepository<FormularioModel, Int
   Page<FormularioModel> findByIdAndNomeFormularioAndIdUsuarioAndAtivo(@Param("id") Integer id,
 			@Param("nomeFormulario") String nomeFormulario, @Param("idUsuario") Integer idUsuario,
 			@Param("ativo") boolean ativo, Pageable pageable);
+	
+	@Query("select fm from FormularioModel fm where (fm.nomeFormulario like :nomeFormulario or :nomeFormulario is null)"
+			+ " and (fm.id = :id)"
+			+ " and (fm.ativo = :ativo or :ativo is null)")
+  Page<FormularioModel> findByIdAndNomeFormularioAndIdUsuarioAndAtivo(@Param("id") Integer id,
+			@Param("nomeFormulario") String nomeFormulario,
+			@Param("ativo") boolean ativo, Pageable pageable);
 
   Optional<FormularioModel> findByIdAndUsuario(Integer idFormulario, UsuarioModel usuario);
 

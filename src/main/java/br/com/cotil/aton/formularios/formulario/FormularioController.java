@@ -38,16 +38,19 @@ public class FormularioController {
 
   @GetMapping
   public Page<FormularioModel> listaFormularios(HttpServletRequest request,
-      @RequestHeader("Token") String token,
+      @RequestHeader(value="Token", required=false) String token,
       @RequestParam(value = "id", required = false) Integer id,
       @RequestParam(value = "nomeFormulario", required = false) String nomeFormulario,
       @RequestParam(value = "ativo", required = false, defaultValue = "true") boolean ativo,
       @RequestParam(value = "page", defaultValue = "0") Integer page,
       @RequestParam(value = "size", defaultValue = "20") Integer size) throws BadRequestException {
 
-    UsuarioModel usuario =
-        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
-
+    UsuarioModel usuario = null;
+    try {
+    	usuario = tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
+    }catch (Exception e) {
+    	return formularioService.listaFormularios(id, nomeFormulario, ativo, page, size);
+	}
     return formularioService.listaFormularios(usuario, id, nomeFormulario, ativo, page, size);
   }
 
@@ -56,9 +59,9 @@ public class FormularioController {
       @RequestHeader("Token") String token, @RequestBody FormularioModel formulario)
       throws BadRequestException, ForbiddenException {
 
-    UsuarioModel usuario =
-        tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
-
+	  UsuarioModel usuario =
+			  tokenService.getUsuarioByToken(token, RequestUtils.getIpFromRequest(request));
+	  
     return formularioService.criaFormulario(usuario, formulario);
   }
 
