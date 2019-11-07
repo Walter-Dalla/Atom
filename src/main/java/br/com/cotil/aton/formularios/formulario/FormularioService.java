@@ -38,9 +38,8 @@ public class FormularioService {
 	public Page<FormularioModel> listaFormularios(UsuarioModel usuario, Integer id, String nomeFormulario,
 			boolean ativo, Integer page, Integer size) throws BadRequestException {
 		
-		if(!nomeFormulario.isEmpty())
+		if(!Utils.isNullOrEmpty(nomeFormulario))
 			nomeFormulario = '%'+nomeFormulario+'%';
-		
 		Page<FormularioModel> lista = formularioRepository.findByIdAndNomeFormularioAndIdUsuarioAndAtivo(id,
 				nomeFormulario, usuario.getId(), ativo, Utils.setPageRequestConfig(page, size));
 		return lista;
