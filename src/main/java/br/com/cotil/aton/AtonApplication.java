@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableAutoConfiguration
 @SpringBootApplication
 @ComponentScan
-public class AtonApplication {
+public class AtonApplication{
 
 	public static void main(String[] args) {
 		SpringApplication.run(AtonApplication.class, args);

@@ -1,6 +1,6 @@
 package br.com.cotil.aton.HttpException;
 
-public class BaseException extends Exception {
+public class BaseException extends RuntimeException {
 
   private static final long serialVersionUID = 1L;
 

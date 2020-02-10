@@ -1,71 +1,81 @@
 package br.com.cotil.aton.formularios.campoFormulario;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import br.com.cotil.aton.HttpException.BadRequestException;
 import br.com.cotil.aton.HttpException.ForbiddenException;
 import br.com.cotil.aton.HttpException.UnauthorizedException;
 import br.com.cotil.aton.campo.CampoUtils;
 import br.com.cotil.aton.campo.campoGrupo.CampoGrupoService;
 import br.com.cotil.aton.campo.customisado.CampoCustomizadoModel;
+import br.com.cotil.aton.campo.customisado.CampoCustomizadoRepository;
 import br.com.cotil.aton.campo.customisado.CampoCustomizadoService;
+import br.com.cotil.aton.campo.customisado.CampoCustomizadoUtils;
 import br.com.cotil.aton.formularios.formulario.FormularioModel;
 import br.com.cotil.aton.formularios.formulario.FormularioRepository;
-import br.com.cotil.aton.formularios.formulario.FormularioService;
-import br.com.cotil.aton.formularios.formularioAcesso.FormularioAcessoService;
-import br.com.cotil.aton.grupo.grupoUsuario.GrupoUsuarioService;
+import br.com.cotil.aton.formularios.formulario.FormularioUtils;
 import br.com.cotil.aton.usuario.usuario.UsuarioModel;
+import br.com.cotil.aton.util.OptionalUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CampoFormularioService {
 
-	CampoFormularioRepository campoFormularioRepository;
-	FormularioRepository formularioRepository;
-	FormularioAcessoService formularioAcessoService;
-	GrupoUsuarioService grupoUsuarioService;
-	CampoCustomizadoService campoCustomizadoService;
-	CampoGrupoService campoGrupoService;
-	FormularioService formularioService;
+	private final CampoFormularioUtils campoFormularioUtils;
+	private final CampoFormularioRepository campoFormularioRepository;
+
+	private final CampoCustomizadoService campoCustomizadoService;
+
+	private final CampoGrupoService campoGrupoService;
+	private final CampoCustomizadoUtils campoCustomizadoUtils;
+	private final FormularioUtils formularioUtils;
 
 	@Autowired
 	public CampoFormularioService(CampoFormularioRepository campoFormularioRepository,
-			FormularioRepository formularioRepository, FormularioAcessoService formularioAcessoService,
-			GrupoUsuarioService grupoUsuarioService, CampoCustomizadoService campoCustomizadoService,
-			CampoGrupoService campoGrupoService, FormularioService formularioService) {
+			FormularioRepository formularioRepository, CampoCustomizadoService campoCustomizadoService,
+			CampoGrupoService campoGrupoService,
+			  CampoCustomizadoRepository campoCustomizadoRepository) {
 		super();
+		this.formularioUtils = new FormularioUtils(formularioRepository);
 		this.campoFormularioRepository = campoFormularioRepository;
-		this.formularioRepository = formularioRepository;
-		this.formularioAcessoService = formularioAcessoService;
-		this.grupoUsuarioService = grupoUsuarioService;
 		this.campoCustomizadoService = campoCustomizadoService;
 		this.campoGrupoService = campoGrupoService;
-		this.formularioService = formularioService;
+
+		this.campoCustomizadoUtils = new CampoCustomizadoUtils(campoCustomizadoRepository);
+		this.campoFormularioUtils = new CampoFormularioUtils(campoFormularioRepository);
+
 	}
 
+	/**
+	 * Metodo Get
+	 *
+	 */
 	public List<CampoFormularioModel> listaCamposFormularios(UsuarioModel usuario, Integer idFormulario)
 			throws BadRequestException, ForbiddenException, UnauthorizedException {
 
-		FormularioModel formulario = formularioService.pegaFormularioDoBanco(idFormulario, usuario);
+		FormularioModel formulario = formularioUtils.pegaFormularioDoBanco(idFormulario, usuario);
 
-		CampoFormualarioUtils.validadarFormulario(formulario, usuario);
+		CampoFormularioUtils.validadarFormulario(formulario, usuario);
 
 		return campoFormularioRepository.findAllByFormulario(idFormulario);
 	}
 
+	/**
+	 * Metodo Post
+	 *
+	 */
 	public CampoFormularioModel criaFormulario(UsuarioModel usuario, CampoFormularioModel campoFormularioModel)
 			throws BadRequestException, ForbiddenException, UnauthorizedException {
 
 		Integer idFormulario = campoFormularioModel.getFormulario().getId();
 		
-		FormularioModel formulario = formularioService
+		FormularioModel formulario = formularioUtils
 				.pegaFormularioDoBanco(idFormulario, usuario);
-		
-		if(formulario.isPublicado())
-			throw new BadRequestException("Esse formulario já foi publicado e não se pode adicionar mais campos ao mesmo");
+
+		CampoFormularioUtils.validIfFormIsNotPublish(formulario,
+				new BadRequestException(CampoFormularioConstants.messageWhenFormIsPublishedAndAddCampos));
 		
 		campoFormularioModel.setFormulario(formulario);
 
@@ -77,47 +87,37 @@ public class CampoFormularioService {
 		CampoCustomizadoModel campoCustomizadoModel = new CampoCustomizadoModel(campo);
 		campoCustomizadoModel.setId(0);
 		campoCustomizadoModel.setMarcado(false);
-		campoFormularioModel.setCampo(campoCustomizadoService.postCampoCustomisado(usuario, campoCustomizadoModel));
-
 		campoFormularioModel.setAtivo(true);
 		campoFormularioModel.setPublicado(formulario.isPublicado());
+		campoFormularioModel.setCampo(campoCustomizadoService.postCampoCustomisado(usuario, campoCustomizadoModel));
+
 		return campoFormularioRepository.save(campoFormularioModel);
 	}
 
+	/**
+	 * Metodo Delete
+	 *
+	 */
 	public CampoFormularioModel desabilitaFormulario(Integer idCampoFormulario, UsuarioModel usuario)
 			throws BadRequestException, ForbiddenException {
 
 		Optional<CampoFormularioModel> campoFormularioOptional = campoFormularioRepository.findById(idCampoFormulario);
 
-		if (!campoFormularioOptional.isPresent())
-			throw new BadRequestException("Campo formulario inexistente");
+		OptionalUtils.validIfIsNotPresent(campoFormularioOptional,
+				new BadRequestException(CampoFormularioConstants.messageWhenFormDontExist));
 		
 		CampoFormularioModel campoFormulario = campoFormularioOptional.get();
 
-		campoCustomizadoService.validaSeCampoExiste(campoFormulario.getCampo().getId(), usuario.getId());
-		if(!campoFormulario.isPublicado()) {
-			campoFormularioRepository.delete(campoFormulario);
-		}else {
-			throw new BadRequestException("Esse formulario já foi publicado e não se pode deletar os campos já existentes");
-		}
-		
+		campoCustomizadoUtils.validaSeCampoExiste(campoFormulario.getCampo().getId(), usuario.getId());
+
+		if(campoFormulario.isPublicado())
+			throw new BadRequestException(CampoFormularioConstants.messageWhenFormIsPublishedAndDeleteCampos);
+
+		campoFormularioRepository.delete(campoFormulario);
 		
 		return campoFormulario;
 	}
 	
-	public List<CampoFormularioModel> findAllByFormulario(Integer id) {
-		return campoFormularioRepository.findAllByFormulario(id);
-	}
 
-	public CampoFormularioModel validaCampoFormulario(CampoFormularioModel campoFormularioModel)
-			throws BadRequestException, UnauthorizedException {
-		
-		Optional<CampoFormularioModel> campoFormularioOptional = campoFormularioRepository.findById(campoFormularioModel.getId());
-		
-		CampoFormualarioUtils.validadarFormulario(campoFormularioOptional);
-		
-		return campoFormularioModel;
-
-	}
 
 }

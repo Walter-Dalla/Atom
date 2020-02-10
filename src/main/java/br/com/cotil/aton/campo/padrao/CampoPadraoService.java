@@ -2,6 +2,8 @@ package br.com.cotil.aton.campo.padrao;
 
 import java.util.Optional;
 
+import br.com.cotil.aton.util.OptionalUtils;
+import br.com.cotil.aton.util.PageUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,24 +28,9 @@ public class CampoPadraoService {
     Page<CampoPadraoModel> campoPadrao =
         campoPadraoRepository.findByIdAndNomeAndDescricao(id, nome, descricao, pageable);
 
-    if (campoPadrao.isEmpty())
-      throw new BadRequestException("Campo não encontrado");
+    PageUtils.validIfPageIsEmpty(campoPadrao, new BadRequestException("Campo não encontrado"));
 
     return campoPadrao;
-  }
-
-  public CampoPadraoModel validaCampoPadrao(Integer id) throws BadRequestException {
-	
-	if(Utils.isNullOrEmpty(id))
-		throw new BadRequestException("Campo não encontrado");
-	
-    Optional<CampoPadraoModel> campoPadrao = campoPadraoRepository.findById(id);
-
-    if (!campoPadrao.isPresent())
-      throw new BadRequestException("Campo não encontrado");
-
-
-    return campoPadrao.get();
   }
 
 }

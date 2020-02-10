@@ -53,7 +53,7 @@ public class CampoGrupoService {
 
   public CampoGrupoModel autorizarCampoParaUmGrupo(UsuarioModel usuario, CampoGrupoModel campoGrupo)
       throws BadRequestException, ForbiddenException {
-
+/*
     CampoCustomizadoModel campo =
         campoCustomizadoService.validaSeCampoExiste(campoGrupo.getCampo().getId(), usuario.getId());
     GrupoModel grupo = grupoUsuarioService.validarGrupo(campoGrupo.getGrupo(), usuario);
@@ -63,6 +63,8 @@ public class CampoGrupoService {
     // campoGrupo.setNivelPermissao(nivelPermissao);
     campoGrupo.setAtivo(true);
     return campoGrupoRepository.save(campoGrupo);
+    */
+    return  null;
   }
 
   public CampoGrupoModel desativarCampoParaUmGrupo(UsuarioModel usuario, Integer idCampoGrupo,

@@ -3,6 +3,10 @@ package br.com.cotil.aton.formularios.respostas.formularioResposta;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.cotil.aton.formularios.campoFormulario.CampoFormularioRepository;
+import br.com.cotil.aton.formularios.campoFormulario.CampoFormularioUtils;
+import br.com.cotil.aton.formularios.formulario.FormularioRepository;
+import br.com.cotil.aton.formularios.formulario.FormularioUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,34 +28,37 @@ import br.com.cotil.aton.util.Utils;
 @Service
 public class RespostaService {
 
-	FormularioService formularioService;
-	CampoFormularioService campoFormularioService;
-	CampoRespostaRepository campoRespostaRepository;
-	RespostaRepository respostaRepository;
+	private final CampoFormularioUtils campoFormularioUtils;
+	private final  FormularioUtils formularioUtils;
+	private final  CampoFormularioService campoFormularioService;
+	private final CampoRespostaRepository campoRespostaRepository;
+	private final  RespostaRepository respostaRepository;
 
 	@Autowired
-	public RespostaService(FormularioService formularioService, CampoFormularioService campoFormularioService,
-			CampoRespostaRepository campoRespostaRepository, RespostaRepository respostaRepository) {
+	public RespostaService(FormularioRepository formularioRepository, CampoFormularioService campoFormularioService,
+		   CampoRespostaRepository campoRespostaRepository, RespostaRepository respostaRepository,
+		   CampoFormularioRepository campoFormularioRepository) {
 		super();
-		this.formularioService = formularioService;
+		this.formularioUtils = new FormularioUtils(formularioRepository);
 		this.campoFormularioService = campoFormularioService;
 		this.campoRespostaRepository = campoRespostaRepository;
 		this.respostaRepository = respostaRepository;
+		this.campoFormularioUtils = new CampoFormularioUtils(campoFormularioRepository);
 	}
 
 	public List<CampoFormularioModel> getFormulario(Integer id) throws BadRequestException, UnauthorizedException {
 
-		FormularioModel formulario = formularioService.pegaFormularioDoBanco(id);
+		FormularioModel formulario = formularioUtils.pegaFormularioDoBanco(id);
 
-		return campoFormularioService.findAllByFormulario(formulario.getId());
+		return campoFormularioUtils.findAllByFormulario(formulario.getId());
 	}
 
 	public List<CampoRespostaModel> responderFormulario(PostBodyModel postBodyModel)
 			throws BadRequestException, UnauthorizedException {
 
-		FormularioModel formulario = formularioService.pegaFormularioDoBanco(postBodyModel.getIdFormulario());
+		FormularioModel formulario = formularioUtils.pegaFormularioDoBanco(postBodyModel.getIdFormulario());
 
-		List<CampoFormularioModel> camposForm = campoFormularioService.findAllByFormulario(formulario.getId());
+		List<CampoFormularioModel> camposForm = campoFormularioUtils.findAllByFormulario(formulario.getId());
 
 		List<ResponseModel> camposResposta = postBodyModel.getCamposResposta();
 
@@ -98,9 +105,9 @@ public class RespostaService {
 	public Page<CampoRespostaModel> getRespostas(Integer id, Integer page, UsuarioModel usuario) throws BadRequestException, UnauthorizedException {
 
 		
-		FormularioModel formulario = formularioService.pegaFormularioDoBanco(id);
+		FormularioModel formulario = formularioUtils.pegaFormularioDoBanco(id);
 		
-		List<CampoFormularioModel> camposForm = campoFormularioService.findAllByFormulario(formulario.getId());
+		List<CampoFormularioModel> camposForm = campoFormularioUtils.findAllByFormulario(formulario.getId());
 		
 		Pageable pageable = Utils.setPageRequestConfig(page, camposForm.size());
 

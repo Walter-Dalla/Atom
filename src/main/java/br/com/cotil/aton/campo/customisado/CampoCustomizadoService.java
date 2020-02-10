@@ -1,7 +1,8 @@
 package br.com.cotil.aton.campo.customisado;
 
-import java.util.Optional;
-
+import br.com.cotil.aton.campo.padrao.CampoPadraoRepository;
+import br.com.cotil.aton.campo.padrao.CampoPadraoUtils;
+import br.com.cotil.aton.util.PageUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,13 +17,15 @@ import br.com.cotil.aton.util.Utils;
 public class CampoCustomizadoService {
 
 	private CampoCustomizadoRepository campoCustomizadoRepository;
-	private CampoPadraoService campoPadraoService;
+	private CampoCustomizadoUtils campoCustomizadoUtils;
+	private CampoPadraoUtils campoPadraoUtils;
 
 	public CampoCustomizadoService(CampoCustomizadoRepository campoCustomizadoRepository,
-			CampoPadraoService campoPadraoService) {
+		   CampoPadraoRepository campoPadraoRepository) {
 		super();
 		this.campoCustomizadoRepository = campoCustomizadoRepository;
-		this.campoPadraoService = campoPadraoService;
+		this.campoCustomizadoUtils = new CampoCustomizadoUtils(campoCustomizadoRepository);
+		this.campoPadraoUtils = new CampoPadraoUtils(campoPadraoRepository);
 	}
 
 	public Page<CampoCustomizadoModel> getCampoCustomizado(UsuarioModel usuario, Integer id, String nome, boolean ativo,
@@ -39,7 +42,7 @@ public class CampoCustomizadoService {
 		campoCustomizado.setUsuario(usuario);
 		campoCustomizado.setAtivo(true);
 		campoCustomizado
-				.setCampoPadrao(campoPadraoService.validaCampoPadrao(campoCustomizado.getCampoPadrao().getId()));
+				.setCampoPadrao(campoPadraoUtils.validaCampoPadrao(campoCustomizado.getCampoPadrao().getId()));
 		campoCustomizado = CampoCustomizadoUtils.padronizar(campoCustomizado);
 
 		return campoCustomizadoRepository.save(campoCustomizado);
@@ -51,8 +54,8 @@ public class CampoCustomizadoService {
 
 		boolean ativo = true;
 
-		CampoCustomizadoModel campoDoBanco = validaSeCampoExiste(campoCustomizado.getId(), usuario.getId());
-		validaAtivo(campoDoBanco, ativo);
+		CampoCustomizadoModel campoDoBanco = campoCustomizadoUtils.validaSeCampoExiste(campoCustomizado.getId(), usuario.getId());
+		campoCustomizadoUtils.validaAtivo(campoDoBanco, ativo);
 
 		campoCustomizado = CampoCustomizadoUtils.padronizar(campoCustomizado);
 
@@ -63,12 +66,23 @@ public class CampoCustomizadoService {
 		return campoCustomizadoRepository.save(campoDoBanco);
 	}
 
+	public CampoCustomizadoModel desmarcarCampoCustomizado(UsuarioModel usuario, Integer idCampo) throws BadRequestException {
+
+		CampoCustomizadoModel campoNoBanco = campoCustomizadoUtils.validaSeCampoExiste(idCampo, usuario.getId());
+
+		campoCustomizadoUtils.validaAtivo(campoNoBanco, true);
+
+		campoCustomizadoRepository.delete(campoNoBanco);
+
+		return campoNoBanco;
+	}
+
 	public CampoCustomizadoModel desativarCampoCustomizado(UsuarioModel usuario, Integer idCampo, boolean ativo)
 			throws BadRequestException, ForbiddenException {
 
-		CampoCustomizadoModel campoNoBanco = validaSeCampoExiste(idCampo, usuario.getId());
+		CampoCustomizadoModel campoNoBanco = campoCustomizadoUtils.validaSeCampoExiste(idCampo, usuario.getId());
 
-		validaAtivo(campoNoBanco, ativo);
+		campoCustomizadoUtils.validaAtivo(campoNoBanco, ativo);
 
 		if(campoNoBanco.isMarcado())
 			throw new BadRequestException("O campo não pode ser deletado pois está marcado!");
@@ -78,68 +92,30 @@ public class CampoCustomizadoService {
 		return campoNoBanco;
 	}
 
-	// ------ Validações e padronizações ------\\
-
-	public CampoCustomizadoModel validaSeCampoExiste(Integer idCampo, Integer idUsuario) throws BadRequestException {
-		Optional<CampoCustomizadoModel> campoCustomizadoOptional = campoCustomizadoRepository
-				.findByIdAndUsuario(idCampo, idUsuario);
-		if (!campoCustomizadoOptional.isPresent())
-			throw new BadRequestException("Campo não encontrado");
-
-		return campoCustomizadoOptional.get();
-	}
-	
-	public CampoCustomizadoModel validaSeCampoExiste(Integer idCampo) throws BadRequestException {
-		Optional<CampoCustomizadoModel> campoCustomizadoOptional = campoCustomizadoRepository
-				.findById(idCampo);
-		if (!campoCustomizadoOptional.isPresent())
-			throw new BadRequestException("Campo não encontrado");
-
-		return campoCustomizadoOptional.get();
-	}
-	
-	public void validaAtivo(CampoCustomizadoModel campo, boolean ativo) throws BadRequestException {
-		if (campo.isAtivo() != ativo)
-			throw new BadRequestException("campo está desativado des de " + campo.getDataAlteracao());
-	}
-
-	public CampoCustomizadoModel getCampoCustomizado(UsuarioModel usuario, Integer id) throws BadRequestException {
-
-		Page<CampoCustomizadoModel> pageCampo = getCampoCustomizado(usuario, id, null, true, null, 0, 1);
-
-		if (pageCampo.getContent().isEmpty())
-			throw new BadRequestException("Campo não encontrado");
-
-		return pageCampo.getContent().get(0);
-	}
-
 	public CampoCustomizadoModel marcarCampoCustomizado(UsuarioModel usuario, Integer idCampo)
 			throws BadRequestException {
 
 		boolean ativo = true;
 
-		CampoCustomizadoModel campoDoBanco = validaSeCampoExiste(idCampo, usuario.getId());
-		validaAtivo(campoDoBanco, ativo);
-		
+		CampoCustomizadoModel campoDoBanco = campoCustomizadoUtils.validaSeCampoExiste(idCampo, usuario.getId());
+		campoCustomizadoUtils.validaAtivo(campoDoBanco, ativo);
+
 		CampoCustomizadoModel campo = new CampoCustomizadoModel(campoDoBanco);
-		
+
 		campo.setMarcado(true);
 		campo.setId(0);
 		campo.setDataAlteracao(null);
 		campo.setDataCriacao(null);
-		
+
 		return campoCustomizadoRepository.save(campo);
 	}
 
-	public CampoCustomizadoModel desmarcarCampoCustomizado(UsuarioModel usuario, Integer idCampo) throws BadRequestException {
-		
-		CampoCustomizadoModel campoNoBanco = validaSeCampoExiste(idCampo, usuario.getId());
+	//Sla o pq isso ta aqui
+	public CampoCustomizadoModel getCampoCustomizado(UsuarioModel usuario, Integer id) throws BadRequestException {
 
-		validaAtivo(campoNoBanco, true);
-		
-		campoCustomizadoRepository.delete(campoNoBanco);
+		Page<CampoCustomizadoModel> pageCampo = getCampoCustomizado(usuario, id, null, true, null, 0, 1);
 
-		
-		return campoNoBanco;
+		return (CampoCustomizadoModel)
+				PageUtils.validIfPageIsEmpty(pageCampo, new BadRequestException("Campo não encontrado")).get(0);
 	}
 }

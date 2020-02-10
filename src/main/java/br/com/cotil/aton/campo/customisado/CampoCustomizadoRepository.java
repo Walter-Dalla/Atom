@@ -17,9 +17,11 @@ public interface CampoCustomizadoRepository extends JpaRepository<CampoCustomiza
 	Page<CampoCustomizadoModel> findAllByUsuario(UsuarioModel usuario, Pageable pageable);
 
 	@Query("select ccm from CampoCustomizadoModel ccm where (ccm.id = :id or :id is null) "
-			+ " and (ccm.nome like %:nome% or :nome is null)" + " and (ccm.ativo = :ativo) "
-			+ " and (ccm.usuario.id = :idUsuario) " + " and (ccm.campoPadrao.ativo = 1) "
-			+ "and (ccm.marcado = :marcado or :marcado is null)")
+			+ " and (ccm.nome like %:nome% or :nome is null)"
+			+ " and (ccm.ativo = :ativo) "
+			+ " and (ccm.usuario.id = :idUsuario) "
+			+ " and (ccm.campoPadrao.ativo = 1) "
+			+ " and (ccm.marcado = :marcado or :marcado is null)")
 	Page<CampoCustomizadoModel> findWithFilter(@Param("id") Integer id, @Param("nome") String nome,
 			@Param("ativo") boolean ativo, @Param("idUsuario") Integer idUsuario, @Param("marcado") Boolean marcado,
 			Pageable pageable);
